@@ -37,11 +37,14 @@ import androidx.compose.ui.unit.sp
 import com.campus.mastermeme.R
 
 @Composable
-fun SelectionBottomSheetContent() {
+fun SelectionBottomSheetContent(
+    openBottomSheetFullScreen: () -> Unit
+) {
     var isSearchVisible by remember { mutableStateOf(false) }
 
     Column {
         HeaderWithSearch(
+            openBottomSheetFullScreen = openBottomSheetFullScreen,
             isSearchVisible = isSearchVisible,
             onSearchVisibilityChange = { isSearchVisible = !isSearchVisible }
         )
@@ -74,7 +77,11 @@ fun SelectionBottomSheetContent() {
 }
 
 @Composable
-fun HeaderWithSearch(isSearchVisible: Boolean, onSearchVisibilityChange: () -> Unit) {
+fun HeaderWithSearch(
+    openBottomSheetFullScreen: () -> Unit,
+    isSearchVisible: Boolean,
+    onSearchVisibilityChange: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -93,7 +100,10 @@ fun HeaderWithSearch(isSearchVisible: Boolean, onSearchVisibilityChange: () -> U
                 textAlign = TextAlign.Center,
                 lineHeight = 21.86.sp
             )
-            IconButton(onClick = onSearchVisibilityChange) {
+            IconButton(onClick = {
+                onSearchVisibilityChange()
+                openBottomSheetFullScreen()
+            }) {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = stringResource(R.string.search),
@@ -119,7 +129,9 @@ fun BottomSheetItem() {
 @Preview
 @Composable
 fun SelectionBottomSheetPreview() {
-    SelectionBottomSheetContent()
+    SelectionBottomSheetContent(
+        openBottomSheetFullScreen = {}
+    )
 }
 
 @Preview
@@ -131,5 +143,5 @@ fun ItemPreview() {
 @Preview
 @Composable
 fun HeaderWithSearchPreview() {
-    HeaderWithSearch(true, {})
+    HeaderWithSearch({}, true, {})
 }
