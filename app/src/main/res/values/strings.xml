@@ -1,11 +1,37 @@
 <resources>
     <string name="app_name">Master Meme</string>
-    <string name="back">Back</string>
+    <string name="your_memes">Your memes</string>
+    <string name="choose_template">Choose template</string>
+    <string name="choose_template_for_your_next_meme_masterpiece">Choose template for your next meme masterpiece</string>
+    <string name="tap_button_to_create_your_first_meme">Tap + button to create your first meme</string>
+    <string name="add">Add</string>
+    <string name="favorite">favorite</string>
+    <string name="close_selection">Close selection</string>
+    <string name="share">Share</string>
+    <string name="delete">Delete</string>
+    <string name="dialog_text">You will not be able to restore them. If you’re fine with that, press \'Delete.\'</string>
+    <string name="search">search</string>
+    <string name="image">image</string>
     <string name="cancel">Cancel</string>
+    <string name="search_input">Search input</string>
+    <string name="no_memes">no_memes</string>
+    <string name="back">back</string>
+    <string name="clear_text">Clear text</string>
+    <string name="no_memes_found">No memes found :(</string>
+    <string name="number_of_templates"> %d templates</string>
+    <string name="newest_first">Newest first</string>
+    <string name="favourites_first">Favourites first</string>
+    <string name="dropdown">Dropdown</string>
+    <plurals name="dialog_title">
+        <item quantity="one">Delete %d meme?</item>
+        <item quantity="other">Delete %d memes?</item>
+    </plurals>
+    <string name="close">Close</string>
     <string name="save">Save</string>
     <string name="text_style">Text Style</string>
     <string name="text_color">Text Color\n</string>
     <string name="text_size">Text Size</string>
     <string name="small_size">Small Size</string>
     <string name="big_size">Big Size</string>
+
 </resources>
