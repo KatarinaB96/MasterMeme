@@ -55,6 +55,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation(libs.core.splashscreen)
+    implementation(libs.coil.compose)
+    implementation (libs.androidx.ui.text.google.fonts)
+    implementation(libs.androidx.compose.animation)
     implementation (libs.koin.core)
     implementation(libs.koin.android)
     implementation(libs.koin.android.workmanager)
