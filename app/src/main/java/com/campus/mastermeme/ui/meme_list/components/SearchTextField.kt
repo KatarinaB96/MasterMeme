@@ -68,7 +68,7 @@ fun SearchTextField() {
                         strokeWidth = 1f
                     )
                 }
-                .focusRequester(focusRequester),
+              .focusRequester(focusRequester),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Search
             ),

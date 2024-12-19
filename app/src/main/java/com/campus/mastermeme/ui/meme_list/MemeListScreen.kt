@@ -1,24 +1,22 @@
 package com.campus.mastermeme.ui.meme_list
 
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.campus.mastermeme.R
 import com.campus.mastermeme.ui.meme_list.components.DeleteMemesDialog
 import com.campus.mastermeme.ui.meme_list.components.EmptyContent
@@ -26,6 +24,7 @@ import com.campus.mastermeme.ui.meme_list.components.FloatingActionButton
 import com.campus.mastermeme.ui.meme_list.components.MemeGrid
 import com.campus.mastermeme.ui.meme_list.components.MemeTopBar
 import com.campus.mastermeme.ui.meme_list.components.SelectionBottomSheetContent
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,6 +48,7 @@ fun MemeListScreen() {
         R.drawable.the_rock_driving_8,
     )
 
+
     val context = LocalContext.current
 
     var isSheetOpen by remember { mutableStateOf(false) }
@@ -60,20 +60,39 @@ fun MemeListScreen() {
     val inSelectionMode by remember { derivedStateOf { selectedIds.isNotEmpty() } }
 
     var showDialog by remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState()
+    // val sheetState = rememberModalBottomSheetState(
+    //    confirmValueChange = { true },
+    //  )
+    var skipPartiallyExpanded by remember { mutableStateOf(true) }
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = skipPartiallyExpanded, confirmValueChange = { true })
+
+    val coroutineScope = rememberCoroutineScope()
+
+    fun openBottomSheetFullScreen() {
+        skipPartiallyExpanded = true
+        coroutineScope.launch() {
+            sheetState.expand()
+        }
+
+    }
+
+    LaunchedEffect(true) {
+        skipPartiallyExpanded = false
+    }
 
 
     if (isSheetOpen) {
         ModalBottomSheet(
-            modifier = Modifier
-                .fillMaxHeight()
-                .windowInsetsPadding(WindowInsets(0.dp)),
+            modifier = Modifier.fillMaxSize(),
             sheetState = sheetState,
             onDismissRequest = {
                 isSheetOpen = false
             }
         ) {
-            SelectionBottomSheetContent()
+            SelectionBottomSheetContent(
+                openBottomSheetFullScreen = { openBottomSheetFullScreen() },
+            )
         }
     }
 
@@ -96,7 +115,11 @@ fun MemeListScreen() {
         },
         floatingActionButton = {
             if (!inSelectionMode) {
-                FloatingActionButton { isSheetOpen = true }
+                FloatingActionButton {
+                    isSheetOpen = true
+                    skipPartiallyExpanded = false
+
+                }
             }
         }
     ) { paddingValues ->
