@@ -62,7 +62,7 @@ fun ChangeTextStylesBottomBar(modifier: Modifier = Modifier) {
                     },
             )
             Image(
-                painter = painterResource(id = R.drawable.text_color),
+                painter = painterResource(id = R.drawable.color_palette),
                 contentDescription = stringResource(R.string.text_color),
                 modifier = Modifier.size(48.dp)
                     .clickable {
@@ -85,9 +85,7 @@ fun ChangeTextStylesBottomBar(modifier: Modifier = Modifier) {
 @Composable
 private fun ChangeTextStylesBottomBarPreview() {
     MasterMemeTheme {
-        ChangeTextStylesBottomBar(
-
-        )
+        ChangeTextStylesBottomBar()
     }
 
 }
