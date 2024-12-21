@@ -7,13 +7,21 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ExperimentalComposeApi
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.campus.mastermeme.edit.presentation.components.ChangeColorBottomBar
 import com.campus.mastermeme.edit.presentation.components.ChangeSizeBottomBar
 import com.campus.mastermeme.edit.presentation.components.ChangeStyleBottomBar
@@ -23,9 +31,11 @@ import com.campus.mastermeme.edit.presentation.components.DefaultBottomBar
 import com.campus.mastermeme.edit.presentation.components.MemeEditor
 import com.campus.mastermeme.edit.presentation.components.TopAppBar
 import com.campus.mastermeme.ui.theme.MasterMemeTheme
+import dev.shreyaspatil.capturable.capturable
+import dev.shreyaspatil.capturable.controller.rememberCaptureController
+import kotlinx.coroutines.launch
 
 @Composable
-
 fun EditScreenRoot(
     viewModel: EditViewModel = org.koin.androidx.compose.koinViewModel()
 ) {
@@ -36,11 +46,18 @@ fun EditScreenRoot(
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalComposeApi::class)
 @Composable
 private fun EditScreen(
     state: EditState,
     onAction: (EditAction) -> Unit
 ) {
+
+    val captureController = rememberCaptureController()
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+
 
 
     Scaffold(
@@ -51,7 +68,11 @@ private fun EditScreen(
         bottomBar = {
             Column {
                 if (state.isChangeFont) {
-                    ChangeStyleBottomBar()
+                    ChangeStyleBottomBar(
+                        onChangeFontClick = { font ->
+                            onAction(EditAction.OnChangeFontText(font))
+                        }
+                    )
                 }
                 if (state.isChangeSize) {
                     ChangeSizeBottomBar(
@@ -117,6 +138,7 @@ private fun EditScreen(
                         text = state.texts[state.selectedTextIndex].text
                     )
                 }
+
                 MemeEditor(
                     texts = state.texts,
                     onPositionChange = { index, offset ->
@@ -128,11 +150,32 @@ private fun EditScreen(
                     onSelectText = { index ->
                         onAction(EditAction.OnClickText(index))
                     },
-                    selectedTextIndex = state.selectedTextIndex
+                    selectedTextIndex = state.selectedTextIndex,
+                    modifier = Modifier
+                        .size(300.dp)
+                        .capturable(captureController)
                 )
+
+                Button(
+                    modifier = Modifier.align(Alignment.TopCenter), onClick = {
+                        scope.launch {
+                            val bitmapAsync = captureController.captureAsync()
+                            try {
+                                val bitmap = bitmapAsync.await()
+                                onAction(EditAction.OnSaveMeme(context, bitmap, "meme1.png"))
+                            } catch (error: Throwable) {
+                                // Error occurred, do something.
+                            }
+                        }
+                    }) {
+                    Text("Save")
+                }
+
             }
         }
     )
+
+
 }
 
 

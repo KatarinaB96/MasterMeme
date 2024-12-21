@@ -1,7 +1,10 @@
 package com.campus.mastermeme.edit.presentation
 
+import android.content.Context
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.text.font.FontFamily
 
 sealed interface EditAction {
     data object OnUndo : EditAction //for undo action
@@ -34,7 +37,9 @@ sealed interface EditAction {
 
     data class OnChangeColorText(val color: Color) : EditAction //for changing color of text
     data class OnChangeSizeText(val size: Float) : EditAction //for changing size of text
+    data class OnChangeFontText(val font: FontFamily) : EditAction //for changing font of text
 
+    data class OnSaveMeme(val context: Context, val bitmap : ImageBitmap, val fileName: String) : EditAction //for saving meme
 //  data class OnChangeText(val texts: List<MemeText>) : EditAction
     //   data class OnSelectText(val index: Int) : EditAction
 

@@ -1,5 +1,6 @@
 [versions]
 agp = "8.7.3"
+capturable = "2.1.0"
 coilCompose = "3.0.4"
 koin = "4.0.0"
 kotlin = "2.0.21"
@@ -17,6 +18,7 @@ composeAnimation = "1.7.6"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
+capturable = { module = "dev.shreyaspatil:capturable", version.ref = "capturable" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

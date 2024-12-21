@@ -8,7 +8,6 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,12 +31,19 @@ import com.campus.mastermeme.edit.presentation.model.MemeText
 @Composable
 fun MemeEditor(
     texts: List<MemeText>,
-    onPositionChange: (Int, Offset) -> Unit,
-    onDoubleTap: () -> Unit,
-    onSelectText: (Int) -> Unit,
-    selectedTextIndex: Int
+    onPositionChange: (Int, Offset) -> Unit = { _, _ -> },
+    onDoubleTap: () -> Unit = {},
+    onSelectText: (Int) -> Unit = {},
+    selectedTextIndex: Int = -1,
+    modifier: Modifier = Modifier
 ) {
-    Box(modifier = Modifier.size(300.dp)) {
+
+
+
+    Box(
+        modifier = modifier
+    )
+    {
         Image(
             painter = painterResource(id = R.drawable.ic_launcher_background),
             contentDescription = null,
@@ -49,7 +55,6 @@ fun MemeEditor(
             DraggableText(
                 index = index,
                 text = memeText,
-
                 onDoubleTap = onDoubleTap,
                 onDragEnd = { newPosition -> onPositionChange(index, newPosition) },
                 onSelectText = { onSelectText(index) },
@@ -59,6 +64,7 @@ fun MemeEditor(
         }
     }
 }
+
 
 @Composable
 fun DraggableText(
@@ -75,6 +81,7 @@ fun DraggableText(
         color = text.textColor,
         fontSize = text.textSize.sp,
         fontWeight = FontWeight.Bold,
+        fontFamily = text.textFont,
         modifier = Modifier
             .offset { IntOffset(offset.x.toInt(), offset.y.toInt()) }
             .pointerInput(Unit) {
