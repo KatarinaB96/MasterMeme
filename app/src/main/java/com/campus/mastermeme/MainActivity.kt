@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.campus.mastermeme.ui.meme_list.MemeListScreen
+import com.campus.mastermeme.edit.presentation.EditScreenRoot
 import com.campus.mastermeme.ui.theme.MasterMemeTheme
 
 class MainActivity : ComponentActivity() {
@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MasterMemeTheme {
-                MemeListScreen()
+               EditScreenRoot()
             }
         }
     }
