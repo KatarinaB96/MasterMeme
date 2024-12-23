@@ -31,7 +31,11 @@ import com.campus.mastermeme.ui.theme.MasterMemeTheme
 import com.campus.mastermeme.ui.theme.PrimaryContainer
 
 @Composable
-fun DefaultBottomBar(onAddTextClick: () -> Unit, modifier: Modifier = Modifier) {
+fun DefaultBottomBar(
+    onAddTextClick: () -> Unit,
+    onSaveMemeClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -88,7 +92,7 @@ fun DefaultBottomBar(onAddTextClick: () -> Unit, modifier: Modifier = Modifier) 
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent
             ),
-            onClick = { /*TODO*/ },
+            onClick = { onSaveMemeClick() },
         ) {
             Box(
                 modifier = Modifier
@@ -105,7 +109,7 @@ fun DefaultBottomBar(onAddTextClick: () -> Unit, modifier: Modifier = Modifier) 
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Save Meme",
+                    text = stringResource(R.string.save_meme),
                     color = MaterialTheme.colorScheme.onPrimary
 
                 )
@@ -121,8 +125,10 @@ fun DefaultBottomBar(onAddTextClick: () -> Unit, modifier: Modifier = Modifier) 
 private fun DefaultBottomBarPreview() {
     MasterMemeTheme {
         DefaultBottomBar(
-            onAddTextClick = { /*TODO*/ }
+            onAddTextClick = { /*TODO*/ },
+            onSaveMemeClick = { /*TODO*/ }
         )
+
     }
 
 }

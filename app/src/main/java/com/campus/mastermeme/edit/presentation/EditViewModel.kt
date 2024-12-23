@@ -2,13 +2,16 @@ package com.campus.mastermeme.edit.presentation
 
 import android.content.Context
 import android.graphics.Bitmap
+import androidx.compose.runtime.ExperimentalComposeApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.campus.mastermeme.edit.presentation.model.MemeText
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -17,6 +20,9 @@ class EditViewModel : ViewModel() {
     var state by mutableStateOf(EditState())
         private set
 
+
+
+    @OptIn(ExperimentalComposeApi::class)
     fun onAction(action: EditAction) {
         when (action) {
             is EditAction.OnAddText -> {
@@ -85,7 +91,22 @@ class EditViewModel : ViewModel() {
                 )
             }
 
-            EditAction.OnSaveChangeTextBottomTab -> TODO()
+            is EditAction.OnSaveChangeTextBottomTab -> {
+                viewModelScope.launch {
+                    val bitmapAsync = action.captureController.captureAsync()
+                    try {
+                        val bitmap = bitmapAsync.await() // Wait for the bitmap to be captured
+                            .asAndroidBitmap() // Convert to Android Bitmap
+                        saveBitmapToCache(
+                            context = action.context,
+                            bitmap = bitmap,
+                            fileName = action.fileName
+                        )
+                    } catch (error: Throwable) {
+                        // Error occurred, do something.
+                    }
+                }
+            }
             EditAction.OnClickOutsideOfText -> {
                 state = state.copy(
                     isClickText = false,
@@ -117,15 +138,7 @@ class EditViewModel : ViewModel() {
                 state = state.copy(texts = texts)
             }
 
-            is EditAction.OnSaveMeme -> {
-                saveBitmapToCache(
-                    context = action.context,
-                    bitmap = action.bitmap.asAndroidBitmap(),
-                    fileName = action.fileName
-                )
 
-
-            }
         }
     }
 

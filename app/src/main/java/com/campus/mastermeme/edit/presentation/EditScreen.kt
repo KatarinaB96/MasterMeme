@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ExperimentalComposeApi
 import androidx.compose.runtime.remember
@@ -33,7 +31,6 @@ import com.campus.mastermeme.edit.presentation.components.TopAppBar
 import com.campus.mastermeme.ui.theme.MasterMemeTheme
 import dev.shreyaspatil.capturable.capturable
 import dev.shreyaspatil.capturable.controller.rememberCaptureController
-import kotlinx.coroutines.launch
 
 @Composable
 fun EditScreenRoot(
@@ -96,6 +93,15 @@ private fun EditScreen(
                     if (!state.isClickText) {
                         DefaultBottomBar(
                             onAddTextClick = { onAction(EditAction.OnAddText) },
+                            onSaveMemeClick = {
+                                onAction(
+                                    EditAction.OnSaveChangeTextBottomTab(
+                                        context = context,
+                                        fileName = "meme23.png",
+                                        captureController = captureController
+                                    )
+                                )
+                            },
                         )
                     } else {
                         ChangeTextStylesBottomBar(
@@ -103,6 +109,7 @@ private fun EditScreen(
                             onTextStyleClick = { onAction(EditAction.OnChangeFontClick) },
                             onTextSizeClick = { onAction(EditAction.OnChangeSizeClick) },
                             onTextColorClick = { onAction(EditAction.OnChangeColorClick) },
+
                         )
                     }
                 }
@@ -155,22 +162,6 @@ private fun EditScreen(
                         .size(300.dp)
                         .capturable(captureController)
                 )
-
-                Button(
-                    modifier = Modifier.align(Alignment.TopCenter), onClick = {
-                        scope.launch {
-                            val bitmapAsync = captureController.captureAsync()
-                            try {
-                                val bitmap = bitmapAsync.await()
-                                onAction(EditAction.OnSaveMeme(context, bitmap, "meme1.png"))
-                            } catch (error: Throwable) {
-                                // Error occurred, do something.
-                            }
-                        }
-                    }) {
-                    Text("Save")
-                }
-
             }
         }
     )

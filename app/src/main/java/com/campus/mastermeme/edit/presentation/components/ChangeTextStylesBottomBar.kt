@@ -24,6 +24,7 @@ fun ChangeTextStylesBottomBar(
     onTextStyleClick: () -> Unit = {},
     onTextSizeClick: () -> Unit = {},
     onTextColorClick: () -> Unit = {},
+    onSaveClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
 
@@ -80,7 +81,10 @@ fun ChangeTextStylesBottomBar(
                 painter = painterResource(id = R.drawable.check),
                 contentDescription = stringResource(R.string.save),
                 modifier = Modifier
-                    .size(24.dp),
+                    .size(24.dp)
+                    .clickable {
+                        onSaveClick()
+                    },
             )
         }
     }

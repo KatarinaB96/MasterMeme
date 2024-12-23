@@ -33,5 +33,8 @@
     <string name="text_size">Text Size</string>
     <string name="small_size">Small Size</string>
     <string name="big_size">Big Size</string>
+    <string name="text">Text</string>
+    <string name="ok">OK</string>
+    <string name="save_meme">Save Meme</string>
 
 </resources>
