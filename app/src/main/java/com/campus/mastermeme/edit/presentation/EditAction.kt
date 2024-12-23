@@ -43,6 +43,8 @@ sealed interface EditAction {
     data class OnChangeSizeText(val size: Float) : EditAction //for changing size of text
     data class OnChangeFontText(val font: FontFamily) : EditAction //for changing font of text
 
+    data class OnDeleteText(val index: Int) : EditAction //for deleting text
+
     //  data class OnSaveMeme(val context: Context, val bitmap : ImageBitmap, val fileName: String) : EditAction //for saving meme
 //  data class OnChangeText(val texts: List<MemeText>) : EditAction
     //   data class OnSelectText(val index: Int) : EditAction

@@ -13,7 +13,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ExperimentalComposeApi
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -52,7 +51,6 @@ private fun EditScreen(
 
     val captureController = rememberCaptureController()
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
 
 
@@ -156,6 +154,9 @@ private fun EditScreen(
                     },
                     onSelectText = { index ->
                         onAction(EditAction.OnClickText(index))
+                    },
+                    onDeleteText = { index ->
+                        onAction(EditAction.OnDeleteText(index))
                     },
                     selectedTextIndex = state.selectedTextIndex,
                     modifier = Modifier

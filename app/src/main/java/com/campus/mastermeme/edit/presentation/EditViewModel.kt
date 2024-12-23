@@ -138,7 +138,18 @@ class EditViewModel : ViewModel() {
                 state = state.copy(texts = texts)
             }
 
-
+            is EditAction.OnDeleteText -> {
+                val texts = state.texts.toMutableList()
+                texts.removeAt(action.index)
+                state = state.copy(
+                    texts = texts,
+                    isClickText = false,
+                    selectedTextIndex = -1,
+                    isChangeFont = false,
+                    isChangeSize = false,
+                    isChangeColor = false
+                )
+            }
         }
     }
 
