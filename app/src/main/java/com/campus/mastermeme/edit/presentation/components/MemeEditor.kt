@@ -1,6 +1,7 @@
 package com.campus.mastermeme.edit.presentation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -25,11 +26,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -46,34 +49,41 @@ fun MemeEditor(
     selectedTextIndex: Int = -1,
     modifier: Modifier = Modifier
 ) {
-
-
     Box(
-        modifier = modifier
-    )
-    {
-        Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
+        modifier = modifier.background(Color.Red)
+    ) {
+        var imageWidth by remember { mutableStateOf(0f) }
+        var imageHeight by remember { mutableStateOf(0f) }
 
-        texts.forEachIndexed { index, memeText ->
-            DraggableText(
-                index = index,
-                text = memeText,
-                onDoubleTap = { onDoubleTap(index) },
-                onDragEnd = { newPosition -> onPositionChange(index, newPosition) },
-                onSelectText = { onSelectText(index) },
-                isSelected = selectedTextIndex == index,
-                onDeleteText = { onDeleteText(index) },
-
+        Box {
+            Image(
+                painter = painterResource(id = R.drawable.ic_launcher_background),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .onGloballyPositioned { layoutCoordinates ->
+                        imageWidth = layoutCoordinates.size.width.toFloat()
+                        imageHeight = layoutCoordinates.size.height.toFloat()
+                    },
+                contentScale = ContentScale.Crop
             )
+
+            texts.forEachIndexed { index, memeText ->
+                DraggableText(
+                    index = index,
+                    text = memeText,
+                    onDoubleTap = { onDoubleTap(index) },
+                    onDragEnd = { newPosition -> onPositionChange(index, newPosition) },
+                    onSelectText = { onSelectText(index) },
+                    isSelected = selectedTextIndex == index,
+                    onDeleteText = { onDeleteText(index) },
+                    parentWidth = imageWidth,
+                    parentHeight = imageHeight
+                )
+            }
         }
     }
 }
-
 
 @Composable
 fun DraggableText(
@@ -83,9 +93,13 @@ fun DraggableText(
     onDoubleTap: (Int) -> Unit,
     onSelectText: (Int) -> Unit,
     onDeleteText: (Int) -> Unit,
-    isSelected: Boolean
+    isSelected: Boolean,
+    parentWidth: Float,
+    parentHeight: Float
 ) {
     var offset by remember { mutableStateOf(text.position) }
+    var textSize by remember { mutableStateOf(IntSize(0, 0)) }
+
     LaunchedEffect(text.position) {
         offset = text.position
     }
@@ -100,7 +114,15 @@ fun DraggableText(
                     }
                 ) { change, dragAmount ->
                     change.consume()
-                    offset = Offset(offset.x + dragAmount.x, offset.y + dragAmount.y)
+                    val newX = (offset.x + dragAmount.x)
+                        .coerceIn(
+                            0f,
+                            parentWidth - textSize.width
+                        ) // Text genişliği hesaba katılıyor
+                    val newY = (offset.y + dragAmount.y)
+                        .coerceIn(0f, parentHeight - textSize.height) // Text
+
+                    offset = Offset(newX, newY)
                 }
 
             }
@@ -115,7 +137,6 @@ fun DraggableText(
                     })
             }
             .padding(0.dp)
-            .padding(16.dp)
 
 
     ) {
@@ -132,7 +153,9 @@ fun DraggableText(
                     color = if (isSelected) Color.White else Color.Transparent,
                     shape = RoundedCornerShape(8.dp)
                 )
-                .padding(8.dp)
+                .onGloballyPositioned { layoutCoordinates ->
+                    textSize = layoutCoordinates.size
+                }.padding(8.dp)
 
         )
         if (isSelected) {
