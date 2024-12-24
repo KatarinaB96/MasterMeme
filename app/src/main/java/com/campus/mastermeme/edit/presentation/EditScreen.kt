@@ -35,7 +35,6 @@ import dev.shreyaspatil.capturable.controller.rememberCaptureController
 fun EditScreenRoot(
     viewModel: EditViewModel = org.koin.androidx.compose.koinViewModel()
 ) {
-
     EditScreen(
         state = viewModel.state,
         onAction = viewModel::onAction
@@ -51,9 +50,6 @@ private fun EditScreen(
 
     val captureController = rememberCaptureController()
     val context = LocalContext.current
-
-
-
 
     Scaffold(
         topBar = {
@@ -107,6 +103,9 @@ private fun EditScreen(
                             onTextStyleClick = { onAction(EditAction.OnChangeFontClick) },
                             onTextSizeClick = { onAction(EditAction.OnChangeSizeClick) },
                             onTextColorClick = { onAction(EditAction.OnChangeColorClick) },
+                            isTextStyleSelected = state.isChangeFont,
+                            isTextSizeSelected = state.isChangeSize,
+                            isTextColorSelected = state.isChangeColor
 
                         )
                     }
@@ -149,8 +148,8 @@ private fun EditScreen(
                     onPositionChange = { index, offset ->
                         onAction(EditAction.OnChangePositionText(index, offset))
                     },
-                    onDoubleTap = {
-                        onAction(EditAction.OnDoubleTap)
+                    onDoubleTap = { index->
+                        onAction(EditAction.OnDoubleTap(index))
                     },
                     onSelectText = { index ->
                         onAction(EditAction.OnClickText(index))

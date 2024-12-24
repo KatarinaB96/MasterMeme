@@ -36,7 +36,7 @@ import com.campus.mastermeme.edit.presentation.model.MemeText
 fun MemeEditor(
     texts: List<MemeText>,
     onPositionChange: (Int, Offset) -> Unit = { _, _ -> },
-    onDoubleTap: () -> Unit = {},
+    onDoubleTap: (Int) -> Unit = {},
     onSelectText: (Int) -> Unit = {},
     onDeleteText: (Int) -> Unit = {},
     selectedTextIndex: Int = -1,
@@ -59,7 +59,7 @@ fun MemeEditor(
             DraggableText(
                 index = index,
                 text = memeText,
-                onDoubleTap = onDoubleTap,
+                onDoubleTap = { onDoubleTap(index) },
                 onDragEnd = { newPosition -> onPositionChange(index, newPosition) },
                 onSelectText = { onSelectText(index) },
                 isSelected = selectedTextIndex == index,
@@ -76,7 +76,7 @@ fun DraggableText(
     index: Int,
     text: MemeText,
     onDragEnd: (Offset) -> Unit,
-    onDoubleTap: () -> Unit,
+    onDoubleTap: (Int) -> Unit,
     onSelectText: (Int) -> Unit,
     onDeleteText: (Int) -> Unit,
     isSelected: Boolean
@@ -94,7 +94,8 @@ fun DraggableText(
             .pointerInput(Unit) {
                 detectTapGestures(
                     onDoubleTap = {
-                        onDoubleTap()
+                        println("Double Tap Detected, index: $index")
+                        onDoubleTap(index)
                     },
                     onTap = {
                         onSelectText(index)

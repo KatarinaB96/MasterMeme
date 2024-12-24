@@ -16,7 +16,7 @@ sealed interface EditAction {
     data object OnChangeFontClick : EditAction //for clicking changing font style
     data object OnChangeSizeClick : EditAction //for clicking changing font size
     data object OnChangeColorClick : EditAction  //for clicking changing font color
-    data object OnDoubleTap : EditAction  //for double tap on text to open "change text" dialog
+    data class OnDoubleTap(val index: Int) : EditAction  //for double tap on text to open "change text" dialog
     data class OnSaveText(val index: Int, val text: String) :
         EditAction //for changing text in "change text" dialog and click "ok" button
 

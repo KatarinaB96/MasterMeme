@@ -21,7 +21,6 @@ class EditViewModel : ViewModel() {
         private set
 
 
-
     @OptIn(ExperimentalComposeApi::class)
     fun onAction(action: EditAction) {
         when (action) {
@@ -66,10 +65,10 @@ class EditViewModel : ViewModel() {
                 )
             }
 
-            EditAction.OnDoubleTap -> {
+            is EditAction.OnDoubleTap -> {
                 state = state.copy(
                     isTwiceClick = true,
-                    selectedTextIndex = state.texts.size - 1
+                    selectedTextIndex = action.index
                 )
             }
 
@@ -107,6 +106,7 @@ class EditViewModel : ViewModel() {
                     }
                 }
             }
+
             EditAction.OnClickOutsideOfText -> {
                 state = state.copy(
                     isClickText = false,
