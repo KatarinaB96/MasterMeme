@@ -150,6 +150,17 @@ class EditViewModel : ViewModel() {
                     isChangeColor = false
                 )
             }
+
+            EditAction.OnBackClick -> {
+                state = state.copy(isBackClickPopup = true)
+            }
+
+            EditAction.OnDismissBackDialog -> {
+                state = state.copy(isBackClickPopup = false)
+            }
+
+
+            else -> Unit
         }
     }
 

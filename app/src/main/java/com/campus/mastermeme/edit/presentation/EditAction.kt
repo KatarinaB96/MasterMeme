@@ -45,6 +45,10 @@ sealed interface EditAction {
 
     data class OnDeleteText(val index: Int) : EditAction //for deleting text
 
+    data object OnBackClick : EditAction //for clicking back button
+    data object OnDismissBackDialog : EditAction //for clicking "cancel" button or outside dialog in back dialog
+    data object OnLeaveEditor : EditAction //for clicking back button in popup
+
     //  data class OnSaveMeme(val context: Context, val bitmap : ImageBitmap, val fileName: String) : EditAction //for saving meme
 //  data class OnChangeText(val texts: List<MemeText>) : EditAction
     //   data class OnSelectText(val index: Int) : EditAction

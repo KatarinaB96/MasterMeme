@@ -26,6 +26,7 @@ import com.campus.mastermeme.edit.presentation.components.ChangeStyleBottomBar
 import com.campus.mastermeme.edit.presentation.components.ChangeTextDialog
 import com.campus.mastermeme.edit.presentation.components.ChangeTextStylesBottomBar
 import com.campus.mastermeme.edit.presentation.components.DefaultBottomBar
+import com.campus.mastermeme.edit.presentation.components.LeaveEditorDialog
 import com.campus.mastermeme.edit.presentation.components.MemeEditor
 import com.campus.mastermeme.edit.presentation.components.TopAppBar
 import com.campus.mastermeme.ui.theme.MasterMemeTheme
@@ -34,11 +35,24 @@ import dev.shreyaspatil.capturable.controller.rememberCaptureController
 
 @Composable
 fun EditScreenRoot(
-    viewModel: EditViewModel = org.koin.androidx.compose.koinViewModel()
+    viewModel: EditViewModel = org.koin.androidx.compose.koinViewModel(),
+    onBackClick: () -> Unit
 ) {
     EditScreen(
         state = viewModel.state,
-        onAction = viewModel::onAction
+        onAction = { action ->
+            when (action) {
+                EditAction.OnLeaveEditor -> {
+                    onBackClick()
+                }
+
+                else -> Unit
+            }
+            viewModel.onAction(action)
+
+        }
+
+
     )
 }
 
@@ -54,7 +68,9 @@ private fun EditScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar()
+            TopAppBar(
+                onBackClick = { onAction(EditAction.OnBackClick) }
+            )
 
         },
         bottomBar = {
@@ -83,7 +99,8 @@ private fun EditScreen(
                 }
                 BottomAppBar(
                     modifier = Modifier
-                        .fillMaxWidth().background(MaterialTheme.colorScheme.secondaryContainer),
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.secondaryContainer),
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 ) {
                     if (!state.isClickText) {
@@ -129,6 +146,14 @@ private fun EditScreen(
 
             ) {
 
+                if (state.isBackClickPopup) {
+                    LeaveEditorDialog(
+                        onDismiss = { onAction(EditAction.OnDismissBackDialog) },
+                        onLeave = { onAction(EditAction.OnLeaveEditor) },
+                    )
+
+                }
+
                 if (state.isTwiceClick) {
                     ChangeTextDialog(
                         onDismissDialog = { onAction(EditAction.OnDismissDialog) },
@@ -150,7 +175,7 @@ private fun EditScreen(
                     onPositionChange = { index, offset ->
                         onAction(EditAction.OnChangePositionText(index, offset))
                     },
-                    onDoubleTap = { index->
+                    onDoubleTap = { index ->
                         onAction(EditAction.OnDoubleTap(index))
                     },
                     onSelectText = { index ->

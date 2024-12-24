@@ -36,5 +36,8 @@
     <string name="text">Text</string>
     <string name="ok">OK</string>
     <string name="save_meme">Save Meme</string>
+    <string name="leave_editor">Leave editor?</string>
+    <string name="leave_editor_message">You will lose your precious meme. If you\'re fine with that, press ‘Leave’.</string>
+    <string name="leave">Leave</string>
 
 </resources>

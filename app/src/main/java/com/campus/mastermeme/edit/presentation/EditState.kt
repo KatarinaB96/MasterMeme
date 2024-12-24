@@ -10,6 +10,8 @@ data class EditState(
     val isChangeSize: Boolean = false,
     val isChangeColor: Boolean = false,
     val texts: List<MemeText> = emptyList(),
-    val selectedTextIndex: Int = -1
-
-    )
+    val tempMemeText: MemeText? = null, //for changing text font, size and color before saving
+    val tempStack: ArrayDeque<MemeText> = ArrayDeque(), //for undo and redo operation, like stack
+    val selectedTextIndex: Int = -1,
+    val isBackClickPopup: Boolean = false,
+)
