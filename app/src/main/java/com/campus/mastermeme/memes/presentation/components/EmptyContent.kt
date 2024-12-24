@@ -1,4 +1,4 @@
-package com.campus.mastermeme.ui.meme_list.components
+package com.campus.mastermeme.memes.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

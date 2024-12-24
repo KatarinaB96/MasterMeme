@@ -1,6 +1,7 @@
-package com.campus.mastermeme.ui.meme_list.components
+package com.campus.mastermeme.memes.presentation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -28,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -35,18 +38,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.campus.mastermeme.R
+import com.campus.mastermeme.core.domain.models.Meme
+import com.campus.mastermeme.memes.presentation.MemeListState
+import java.util.UUID
 
 @Composable
 fun SelectionBottomSheetContent(
-    openBottomSheetFullScreen: () -> Unit
+    state: MemeListState,
+    openBottomSheetFullScreen: () -> Unit,
+    onMemeSelected: (Meme) -> Unit,
+    onSearchQueryChange: (String) -> Unit,
 ) {
     var isSearchVisible by remember { mutableStateOf(false) }
+    val memes = if (state.searchQuery.isEmpty()) state.availableMeme else state.searchResults
 
     Column {
         HeaderWithSearch(
+            state.searchQuery,
             openBottomSheetFullScreen = openBottomSheetFullScreen,
             isSearchVisible = isSearchVisible,
-            onSearchVisibilityChange = { isSearchVisible = !isSearchVisible }
+            onSearchVisibilityChange = { isSearchVisible = !isSearchVisible },
+            onSearchQueryChange = onSearchQueryChange,
+            memeListSize = memes.size,
+            onBackPressed = { isSearchVisible = false }
         )
 
         if (!isSearchVisible) {
@@ -69,8 +83,21 @@ fun SelectionBottomSheetContent(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(150) {
-                BottomSheetItem()
+            items(if (isSearchVisible) memes else state.availableMeme) { meme ->
+                BottomSheetItem(
+                    resId = meme.resId,
+                    onClick = {
+                        //TODO:
+                        val newMeme = Meme(
+                            id = meme.id,
+                            name = UUID.randomUUID().toString(),
+                            imageUri = meme.resId,
+                            isFavorite = false,
+                            createdAt = System.currentTimeMillis()
+                        )
+                        onMemeSelected(newMeme)
+                    }
+                )
             }
         }
     }
@@ -78,10 +105,15 @@ fun SelectionBottomSheetContent(
 
 @Composable
 fun HeaderWithSearch(
+    searchQuery: String,
     openBottomSheetFullScreen: () -> Unit,
     isSearchVisible: Boolean,
-    onSearchVisibilityChange: () -> Unit
+    onSearchVisibilityChange: () -> Unit,
+    onSearchQueryChange: (String) -> Unit,
+    memeListSize: Int,
+    onBackPressed: () -> Unit
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -91,8 +123,18 @@ fun HeaderWithSearch(
     ) {
 
         if (isSearchVisible) {
-            SearchTextField()
+            SearchTextField(
+                searchQuery,
+                onSearchQueryChange,
+                onImeSearch = {
+                    keyboardController?.hide()
+                },
+                memeListSize,
+                onBackPressed = onBackPressed
+            )
+
         } else {
+            onSearchQueryChange("")
             Text(
                 text = stringResource(R.string.choose_template),
                 color = MaterialTheme.colorScheme.onSurface,
@@ -115,13 +157,14 @@ fun HeaderWithSearch(
 }
 
 @Composable
-fun BottomSheetItem() {
+fun BottomSheetItem(resId: Int, onClick: () -> Unit) {
     Image(
-        painter = painterResource(R.drawable.boardroom_meeting_suggestion_36),
+        painter = painterResource(resId),
         contentDescription = stringResource(R.string.image),
         modifier = Modifier
             .size(176.dp)
-            .clip(RoundedCornerShape(8.dp)),
+            .clip(RoundedCornerShape(8.dp))
+            .clickable { onClick() },
         contentScale = ContentScale.FillBounds
     )
 }
@@ -130,18 +173,21 @@ fun BottomSheetItem() {
 @Composable
 fun SelectionBottomSheetPreview() {
     SelectionBottomSheetContent(
-        openBottomSheetFullScreen = {}
+        state = MemeListState(),
+        openBottomSheetFullScreen = {},
+        onMemeSelected = {},
+        onSearchQueryChange = {}
     )
 }
 
 @Preview
 @Composable
 fun ItemPreview() {
-    BottomSheetItem()
+    BottomSheetItem(R.drawable.bbctk_29, {})
 }
 
 @Preview
 @Composable
 fun HeaderWithSearchPreview() {
-    HeaderWithSearch({}, true, {})
+    HeaderWithSearch("", {}, true, {}, {}, 0, {})
 }

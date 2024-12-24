@@ -14,7 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.campus.mastermeme.R
-import com.campus.mastermeme.ui.theme.MasterMemeTheme
+import com.campus.mastermeme.core.presentation.ui.theme.MasterMemeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

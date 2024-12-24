@@ -1,4 +1,4 @@
-package com.campus.mastermeme.ui.meme_list.components
+package com.campus.mastermeme.memes.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -8,12 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,25 +21,37 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.campus.mastermeme.R
-import com.campus.mastermeme.ui.theme.PrimaryContainer
+import com.campus.mastermeme.core.domain.models.Meme
+import com.campus.mastermeme.core.presentation.ui.theme.PrimaryContainer
 
 @Composable
-fun MemeItem(photo: Int, selected: Boolean, inSelectionMode: Boolean, modifier: Modifier) {
-    var isFavorite by remember { mutableStateOf(true) }
+fun MemeItem(
+    meme: Meme,
+    isSelected: Boolean,
+    inSelectionMode: Boolean,
+    onFavoriteToggle: (Meme) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = modifier
             .size(176.dp)
             .clip(RoundedCornerShape(8.dp))
     ) {
+//        Image(
+//            painter = rememberAsyncImagePainter(model = meme.imageUri),
+//            contentDescription = null,
+//            contentScale = ContentScale.Crop,
+//            modifier = Modifier.fillMaxSize()
+//        )
+
         Image(
-            painter = painterResource(photo),
+            painter =  painterResource(meme.imageUri),
             contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.FillBounds
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
         )
 
         if (inSelectionMode) {
@@ -60,10 +71,9 @@ fun MemeItem(photo: Int, selected: Boolean, inSelectionMode: Boolean, modifier: 
                     .background(brush = gradientSelection)
             )
             Icon(
-                painter = if (selected) painterResource(id = R.drawable.ic_check_filled)
-                else painterResource(id = R.drawable.ic_check_empty),
+                painter = if (isSelected) painterResource(id = R.drawable.ic_check_filled) else painterResource(id = R.drawable.ic_check_empty),
+                contentDescription = if (isSelected) "Selected" else "Not selected",
                 tint = PrimaryContainer,
-                contentDescription = null,
                 modifier = Modifier.align(Alignment.TopEnd)
             )
         } else {
@@ -82,15 +92,14 @@ fun MemeItem(photo: Int, selected: Boolean, inSelectionMode: Boolean, modifier: 
             )
 
             Icon(
-                painter = if (isFavorite) painterResource(id = R.drawable.ic_selected_favorite)
-                else painterResource(id = R.drawable.ic_empty_favorite),
-                contentDescription = stringResource(R.string.favorite),
+                imageVector = if (meme.isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                contentDescription = if (meme.isFavorite) "not favorite" else "Favorite",
                 tint = PrimaryContainer,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(horizontal = 2.dp, vertical = 3.dp)
                     .clickable {
-                        isFavorite = !isFavorite
+                        onFavoriteToggle(meme)
                     }
             )
         }
@@ -100,11 +109,5 @@ fun MemeItem(photo: Int, selected: Boolean, inSelectionMode: Boolean, modifier: 
 @Preview
 @Composable
 fun MemeItemSelectionModePreview() {
-    MemeItem(R.drawable.bbctk_29, true, true, modifier = Modifier)
-}
-
-@Preview
-@Composable
-fun MemeItemPreview() {
-    MemeItem(R.drawable.bbctk_29, true, false, modifier = Modifier)
+    MemeItem(meme = Meme(0,"n", R.drawable.i_bet_hes_thinking_about_other_women_10, true, 232L), true, true, {})
 }

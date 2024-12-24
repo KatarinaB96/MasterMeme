@@ -1,4 +1,4 @@
-package com.campus.mastermeme.ui.meme_list.components
+package com.campus.mastermeme.memes.presentation.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.campus.mastermeme.R
-import com.campus.mastermeme.ui.theme.BottomBorderColor
+import com.campus.mastermeme.core.presentation.ui.theme.BottomBorderColor
 
 @Composable
 fun DeleteMemesDialog(

@@ -1,4 +1,4 @@
-package com.campus.mastermeme.ui.meme_list.components
+package com.campus.mastermeme.memes.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -19,10 +19,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.campus.mastermeme.R
-import com.campus.mastermeme.ui.theme.GradientColor2
-import com.campus.mastermeme.ui.theme.GradientPressed1
-import com.campus.mastermeme.ui.theme.GradientPressed2
-import com.campus.mastermeme.ui.theme.PrimaryContainer
+import com.campus.mastermeme.core.presentation.ui.theme.GradientColor2
+import com.campus.mastermeme.core.presentation.ui.theme.GradientPressed1
+import com.campus.mastermeme.core.presentation.ui.theme.GradientPressed2
+import com.campus.mastermeme.core.presentation.ui.theme.PrimaryContainer
 
 @Composable
 fun FloatingActionButton(onClick: () -> Unit) {

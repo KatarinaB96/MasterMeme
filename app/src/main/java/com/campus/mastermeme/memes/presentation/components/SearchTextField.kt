@@ -1,4 +1,4 @@
-package com.campus.mastermeme.ui.meme_list.components
+package com.campus.mastermeme.memes.presentation.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,10 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
@@ -34,23 +31,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.campus.mastermeme.R
-import com.campus.mastermeme.ui.theme.BottomBorderColor
-import com.campus.mastermeme.ui.theme.CursorColor
-import com.campus.mastermeme.ui.theme.SchemesOutline
+import com.campus.mastermeme.core.presentation.ui.theme.BottomBorderColor
+import com.campus.mastermeme.core.presentation.ui.theme.CursorColor
+import com.campus.mastermeme.core.presentation.ui.theme.SchemesOutline
 
 @Composable
-fun SearchTextField() {
-    var textValue by remember { mutableStateOf("") }
-    val imageList = emptyList<Int>()
+fun SearchTextField(
+    searchQuery: String,
+    onSearchQueryChange: (String) -> Unit,
+    onImeSearch: () -> Unit,
+    memeListSize: Int,
+    onBackPressed: () -> Unit
+) {
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
     Column {
         TextField(
-            value = textValue,
-            onValueChange = { newValue ->
-                textValue = newValue
-            },
-
+            value = searchQuery,
+            onValueChange = onSearchQueryChange,
             placeholder = {
                 Text(
                     stringResource(R.string.search_input),
@@ -68,13 +66,16 @@ fun SearchTextField() {
                         strokeWidth = 1f
                     )
                 }
-              .focusRequester(focusRequester),
+                .focusRequester(focusRequester),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Search
             ),
             keyboardActions = KeyboardActions(
                 onDone = {
                     focusManager.clearFocus()
+                },
+                onSearch = {
+                    onImeSearch()
                 }
             ),
 
@@ -89,17 +90,23 @@ fun SearchTextField() {
             ),
 
             leadingIcon = {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(R.string.back),
-                    tint = MaterialTheme.colorScheme.secondary
-                )
+                IconButton(
+                    onClick = {
+                        onBackPressed()
+                        onSearchQueryChange("")
+                    }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.back),
+                        tint = MaterialTheme.colorScheme.secondary
+                    )
+                }
             },
             trailingIcon = {
-                if (textValue.isNotEmpty()) {
+                if (searchQuery.isNotEmpty()) {
                     IconButton(
                         onClick = {
-                            textValue = ""
+                            onSearchQueryChange("")
                         }) {
                         Icon(
                             imageVector = Icons.Default.Close,
@@ -112,7 +119,7 @@ fun SearchTextField() {
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (imageList.isEmpty()) {
+        if (memeListSize <= 0) {
             Text(
                 stringResource(R.string.no_memes_found),
                 color = SchemesOutline,
@@ -122,7 +129,7 @@ fun SearchTextField() {
             )
         } else {
             Text(
-                stringResource(R.string.number_of_templates, imageList.size),
+                stringResource(R.string.number_of_templates, memeListSize),
                 color = SchemesOutline,
                 fontWeight = FontWeight.W400,
                 fontSize = 12.sp,
@@ -135,5 +142,5 @@ fun SearchTextField() {
 @Preview
 @Composable
 fun SearchTextFieldPreview() {
-    SearchTextField()
+    SearchTextField("", {}, {}, 0, {})
 }

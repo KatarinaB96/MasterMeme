@@ -44,7 +44,7 @@ import com.campus.mastermeme.edit.presentation.components.ChangeStyleBottomBar
 import com.campus.mastermeme.edit.presentation.components.ChangeTextStylesBottomBar
 import com.campus.mastermeme.edit.presentation.components.DefaultBottomBar
 import com.campus.mastermeme.edit.presentation.components.TopAppBar
-import com.campus.mastermeme.ui.theme.MasterMemeTheme
+import com.campus.mastermeme.core.presentation.ui.theme.MasterMemeTheme
 
 @Composable
 

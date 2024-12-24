@@ -1,4 +1,4 @@
-package com.campus.mastermeme.ui.meme_list.components
+package com.campus.mastermeme.memes.presentation.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -21,6 +21,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,23 +33,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.campus.mastermeme.R
-import com.campus.mastermeme.ui.theme.OnSurface
+import com.campus.mastermeme.core.presentation.ui.theme.OnSurface
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MemeTopBar(
     inSelectionMode: Boolean,
-    selectedIdsCount: Int = 0,
-    selectedOption: String = "",
-    imageListNotEmpty: Boolean = true,
+    selectedIdsCount: Int,
+    imageListNotEmpty: Boolean,
     expanded: Boolean = false,
     onCloseSelection: () -> Unit = {},
-    onDeleteSelection: () -> Unit = {},
+    onShowDialog: () -> Unit = {},
     onDropdownClick: () -> Unit = {},
     onDismissDropdown: () -> Unit = {},
     onOptionSelect: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
+    var selectedOption by remember { mutableStateOf(context.getString(R.string.favourites_first)) }
 
     if (inSelectionMode) {
         TopAppBar(
@@ -75,7 +79,7 @@ fun MemeTopBar(
                         contentDescription = stringResource(R.string.share)
                     )
                 }
-                IconButton(onClick = onDeleteSelection) {
+                IconButton(onClick = onShowDialog) {
                     Icon(
                         imageVector = Icons.Outlined.Delete,
                         tint = MaterialTheme.colorScheme.secondary,
@@ -114,7 +118,7 @@ fun MemeTopBar(
                     Icon(
                         imageVector = Icons.Default.ArrowDropDown,
                         contentDescription = stringResource(R.string.dropdown),
-                        tint = if (imageListNotEmpty)  MaterialTheme.colorScheme.secondary else OnSurface.copy(alpha = 0.5f),
+                        tint = if (imageListNotEmpty) MaterialTheme.colorScheme.secondary else OnSurface.copy(alpha = 0.5f),
                         modifier = Modifier.size(20.dp)
                     )
                     if (imageListNotEmpty) {
@@ -124,11 +128,17 @@ fun MemeTopBar(
                         ) {
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.favourites_first)) },
-                                onClick = { onOptionSelect(context.getString(R.string.favourites_first)) }
+                                onClick = {
+                                    selectedOption = context.getString(R.string.favourites_first)
+                                    onOptionSelect(context.getString(R.string.favourites_first))
+                                }
                             )
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.newest_first)) },
-                                onClick = { onOptionSelect(context.getString(R.string.newest_first)) }
+                                onClick = {
+                                    selectedOption = context.getString(R.string.newest_first)
+                                    onOptionSelect(context.getString(R.string.newest_first))
+                                }
                             )
                         }
                     }
@@ -145,9 +155,12 @@ fun MemeTopBarPreview() {
         // Preview in selection mode
         MemeTopBar(
             inSelectionMode = true,
-            selectedIdsCount = 3,
-            onCloseSelection = {},
-            onDeleteSelection = {}
+            imageListNotEmpty = true,
+            expanded = false,
+            onDropdownClick = {},
+            onDismissDropdown = {},
+            onOptionSelect = {},
+            selectedIdsCount = 5
         )
 
         Spacer(modifier = Modifier.height(56.dp))
@@ -155,12 +168,12 @@ fun MemeTopBarPreview() {
         // Preview in default mode
         MemeTopBar(
             inSelectionMode = false,
-            selectedOption = "Favourites first",
             imageListNotEmpty = true,
             expanded = false,
             onDropdownClick = {},
             onDismissDropdown = {},
-            onOptionSelect = {}
+            onOptionSelect = {},
+            selectedIdsCount = 0
         )
     }
 }

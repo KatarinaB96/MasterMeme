@@ -1,4 +1,4 @@
-package com.campus.mastermeme.ui.theme
+package com.campus.mastermeme.core.presentation.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme

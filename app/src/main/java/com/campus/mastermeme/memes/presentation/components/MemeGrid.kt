@@ -1,4 +1,4 @@
-package com.campus.mastermeme.ui.meme_list.components
+package com.campus.mastermeme.memes.presentation.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -14,17 +14,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,20 +32,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.campus.mastermeme.R
+import com.campus.mastermeme.core.domain.models.Meme
+import com.campus.mastermeme.memes.presentation.MemeListState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MemeGrid(
-    imageList: List<Int>,
+    state: MemeListState,
+    onImageClick: (Meme) -> Unit,
     paddingValues: PaddingValues,
-    selectedIds: Set<Int>,
-    onSelectionChange: (Set<Int>) -> Unit
+    onLongPress: (Meme) -> Unit,
+    onSelectionChange: (List<Meme>) -> Unit,
+    onFavoriteToggle: (Meme) -> Unit
 ) {
-    val inSelectionMode = selectedIds.isNotEmpty()
-    var selectedImage by remember { mutableStateOf<Int?>(null) }
-    var showEnlargedImage by remember { mutableStateOf(false) }
-
-
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier
@@ -58,19 +54,23 @@ fun MemeGrid(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-
-        itemsIndexed(imageList) { index, resId ->
-            val selected = selectedIds.contains(resId)
+        items(state.memes, key = { it.id }) { meme ->
+            val isSelected = state.selectedMemes.contains(meme)
 
             MemeItem(
-                photo = resId,
-                selected = selected,
-                inSelectionMode = inSelectionMode,
-                modifier = if (inSelectionMode) {
+                meme = meme,
+                isSelected = isSelected,
+                inSelectionMode = state.inSelectionMode,
+                onFavoriteToggle = { onFavoriteToggle(meme) },
+                modifier = if (state.inSelectionMode) {
                     Modifier.toggleable(
-                        value = selected,
+                        value = isSelected,
                         onValueChange = {
-                            val updatedSelection = if (it) selectedIds + resId else selectedIds - resId
+                            val updatedSelection = if (it) {
+                                state.selectedMemes + meme
+                            } else {
+                                state.selectedMemes - meme
+                            }
                             onSelectionChange(updatedSelection)
                         },
                         interactionSource = remember { MutableInteractionSource() },
@@ -79,21 +79,14 @@ fun MemeGrid(
                 } else {
                     Modifier.combinedClickable(
                         onClick = {
-                            selectedImage = resId
-                            showEnlargedImage = true
+                            onImageClick(meme)
                         },
                         onLongClick = {
-                            onSelectionChange(selectedIds + resId)
+                            onLongPress(meme)
                         }
                     )
                 }
             )
-        }
-    }
-
-    selectedImage?.let {
-        FullScreenImageDialog(image = it) {
-            selectedImage = null
         }
     }
 }
