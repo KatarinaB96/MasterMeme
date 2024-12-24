@@ -30,7 +30,13 @@ fun ChangeTextDialog(
             onDismissDialog()
         },
         containerColor = MaterialTheme.colorScheme.surface,
-        title = { Text(stringResource(R.string.text), fontSize = 24.sp) },
+        title = {
+            Text(
+                stringResource(R.string.text),
+                fontSize = 24.sp,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        },
         text = {
             TextField(
                 value = editableText,
