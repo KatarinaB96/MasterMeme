@@ -13,6 +13,7 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -63,6 +64,13 @@ private fun EditScreen(
     onAction: (EditAction) -> Unit
 ) {
 
+    LaunchedEffect(state.undoStack) {
+        println("undoStack EditScreen: ${state.undoStack}")
+    }
+    LaunchedEffect(state.redoStack) {
+        println("redoStack: ${state.redoStack}")
+    }
+
     val captureController = rememberCaptureController()
     val context = LocalContext.current
 
@@ -106,14 +114,18 @@ private fun EditScreen(
                     if (!state.isClickText) {
                         DefaultBottomBar(
                             onAddTextClick = { onAction(EditAction.OnAddText) },
+                            onUndoClick = { onAction(EditAction.OnUndo) },
+                            onRedoClick = { onAction(EditAction.OnRedo) },
+                            isUndoEnabled = state.isUndoEnabled,
+                            isRedoEnabled = state.isRedoEnabled,
                             onSaveMemeClick = {
-                                onAction(
-                                    EditAction.OnSaveChangeTextBottomTab(
-                                        context = context,
-                                        fileName = "meme23.png",
-                                        captureController = captureController
-                                    )
-                                )
+                                /* onAction(
+                                     EditAction.OnSaveChangeTextBottomTab(
+                                         context = context,
+                                         fileName = "meme23.png",
+                                         captureController = captureController
+                                     )
+                                 )*/
                             },
                         )
                     } else {
@@ -122,6 +134,7 @@ private fun EditScreen(
                             onTextStyleClick = { onAction(EditAction.OnChangeFontClick) },
                             onTextSizeClick = { onAction(EditAction.OnChangeSizeClick) },
                             onTextColorClick = { onAction(EditAction.OnChangeColorClick) },
+                            onSaveClick = { onAction(EditAction.OnSaveChangeTextBottomTab) },
                             isTextStyleSelected = state.isChangeFont,
                             isTextSizeSelected = state.isChangeSize,
                             isTextColorSelected = state.isChangeColor
@@ -177,6 +190,7 @@ private fun EditScreen(
                     },
                     onDoubleTap = { index ->
                         onAction(EditAction.OnDoubleTap(index))
+
                     },
                     onSelectText = { index ->
                         onAction(EditAction.OnClickText(index))

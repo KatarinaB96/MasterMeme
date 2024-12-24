@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -34,30 +35,50 @@ import com.campus.mastermeme.ui.theme.PrimaryContainer
 fun DefaultBottomBar(
     onAddTextClick: () -> Unit,
     onSaveMemeClick: () -> Unit,
+    onUndoClick: () -> Unit,
+    onRedoClick: () -> Unit,
+    isUndoEnabled: Boolean,
+    isRedoEnabled: Boolean,
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.secondaryContainer),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.secondaryContainer),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceAround
 
     ) {
-
-
         Row(
-            modifier = Modifier
-
+            modifier = Modifier.wrapContentWidth(),
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.undo),
-                contentDescription = stringResource(R.string.back),
-            )
+            IconButton(
+                onClick = { onUndoClick() },
+                enabled = isUndoEnabled,
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.undo),
+                    contentDescription = stringResource(R.string.back),
+                    tint = if (isUndoEnabled) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.secondary.copy(
+                        alpha = 0.3f
+                    )
 
-            Icon(
-                painter = painterResource(id = R.drawable.redo),
-                contentDescription = stringResource(R.string.back),
-                tint = Color.Black,
-            )
+                )
+            }
+            IconButton(
+                onClick = { onRedoClick() },
+                enabled = isRedoEnabled,
+
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.redo),
+                    contentDescription = stringResource(R.string.back),
+                    tint = if (isRedoEnabled) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.secondary.copy(
+                        alpha = 0.3f
+                    ),
+
+                )
+            }
         }
 
         OutlinedButton(
@@ -125,8 +146,12 @@ fun DefaultBottomBar(
 private fun DefaultBottomBarPreview() {
     MasterMemeTheme {
         DefaultBottomBar(
-            onAddTextClick = { /*TODO*/ },
-            onSaveMemeClick = { /*TODO*/ }
+            onAddTextClick = {  },
+            onSaveMemeClick = {  },
+            onUndoClick = {  },
+            onRedoClick = {  },
+            isUndoEnabled = true,
+            isRedoEnabled = true,
         )
 
     }

@@ -67,7 +67,7 @@ fun MemeEditor(
                 onDragEnd = { newPosition -> onPositionChange(index, newPosition) },
                 onSelectText = { onSelectText(index) },
                 isSelected = selectedTextIndex == index,
-                onDeleteText = { onDeleteText(index) }
+                onDeleteText = { onDeleteText(index) },
 
             )
         }
@@ -86,14 +86,23 @@ fun DraggableText(
     isSelected: Boolean
 ) {
     var offset by remember { mutableStateOf(text.position) }
+    LaunchedEffect(text.position) {
+        offset = text.position
+    }
     Box(
         modifier = Modifier
             .offset { IntOffset(offset.x.toInt(), offset.y.toInt()) }
             .pointerInput(Unit) {
-                detectDragGestures { change, dragAmount ->
+                detectDragGestures(
+                    onDragEnd = {
+                        onDragEnd(offset)
+                        println("Drag End")
+                    }
+                ) { change, dragAmount ->
                     change.consume()
                     offset = Offset(offset.x + dragAmount.x, offset.y + dragAmount.y)
                 }
+
             }
             .pointerInput(Unit) {
                 detectTapGestures(
@@ -141,9 +150,7 @@ fun DraggableText(
 
     }
 
-    LaunchedEffect(offset) {
-        onDragEnd(offset)
-    }
+
 }
 
 @Composable

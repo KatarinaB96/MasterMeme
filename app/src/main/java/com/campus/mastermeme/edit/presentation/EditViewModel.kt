@@ -25,19 +25,36 @@ class EditViewModel : ViewModel() {
     fun onAction(action: EditAction) {
         when (action) {
             is EditAction.OnAddText -> {
-                state = state.copy(
-                    isAddText = true, texts = state.texts + MemeText(
+
+                loadCurrentStateToUndoStack()
+
+                val texts = state.texts.toMutableList()
+                texts.add(
+                    MemeText(
                         text = "TAP TWICE TO EDIT",
                         position = Offset(0f, 0f),
                     )
                 )
+
+                state = state.copy(
+                    isAddText = true,
+                    texts = texts,
+                    isRedoEnabled = state.redoStack.isNotEmpty(),
+                )
+
+                println("undoStack OnAddText: ${state.undoStack}")
             }
 
             is EditAction.OnClickText -> {
+                loadCurrentStateToUndoStack()
+
                 state = state.copy(
                     isClickText = true,
-                    selectedTextIndex = action.index
+                    selectedTextIndex = action.index,
+                    tempMemeText = state.texts[action.index],
                 )
+
+                println("undoStack OnClickText: ${state.undoStack}")
             }
 
             is EditAction.OnChangeFontClick -> {
@@ -53,9 +70,14 @@ class EditViewModel : ViewModel() {
             }
 
             is EditAction.OnSaveText -> {
+                loadCurrentStateToUndoStack()
+
                 val texts = state.texts.toMutableList()
                 texts[action.index] = texts[action.index].copy(text = action.text)
-                state = state.copy(texts = texts)
+                state = state.copy(
+                    texts = texts,
+                    selectedTextIndex = -1,
+                )
             }
 
 
@@ -72,12 +94,53 @@ class EditViewModel : ViewModel() {
                 )
             }
 
-            EditAction.OnRedo -> TODO()
-            EditAction.OnUndo -> TODO()
+            EditAction.OnRedo -> {
+                val texts = state.redoStack.last()
+
+                loadCurrentStateToUndoStack()
+
+                val redoStack = state.redoStack
+                redoStack.removeLast()
+
+                state = state.copy(
+                    texts = texts,
+                    redoStack = redoStack,
+                    isRedoEnabled = state.redoStack.isNotEmpty()
+                )
+                println("undoStack OnRedo: ${state.undoStack}")
+
+            }
+
+            EditAction.OnUndo -> {
+                loadCurrentStateToRedoStack()
+
+                val texts = state.undoStack.last()
+
+                val undoStack = state.undoStack
+                undoStack.removeLast()
+
+                state = state.copy(
+                    texts = texts,
+                    undoStack = undoStack,
+                    isUndoEnabled = state.undoStack.isNotEmpty(),
+                    isRedoEnabled = state.redoStack.isNotEmpty()
+                )
+                println("undoStack OnUndo: ${state.undoStack}")
+
+            }
+
+
             is EditAction.OnChangePositionText -> {
+                loadCurrentStateToUndoStack()
+
                 val texts = state.texts.toMutableList()
                 texts[action.index] = texts[action.index].copy(position = action.offset)
-                state = state.copy(texts = texts)
+
+                state = state.copy(
+                    texts = texts,
+                )
+                println("undoStack OnChangePositionText: ${state.undoStack}")
+
             }
 
             EditAction.OnCancelChangeTextBottomTab -> {
@@ -86,11 +149,33 @@ class EditViewModel : ViewModel() {
                     isChangeSize = false,
                     isChangeColor = false,
                     isClickText = false,
-                    selectedTextIndex = -1
+                    texts = state.texts.mapIndexed { index, it ->
+                        if (index == state.selectedTextIndex) {
+                            it.copy(
+                                textFont = state.tempMemeText?.textFont ?: it.textFont,
+                                textSize = state.tempMemeText?.textSize ?: it.textSize,
+                                textColor = state.tempMemeText?.textColor ?: it.textColor
+                            )
+                        } else {
+                            it
+                        }
+                    },
+                    selectedTextIndex = -1,
                 )
+
             }
 
             is EditAction.OnSaveChangeTextBottomTab -> {
+                state = state.copy(
+                    isChangeFont = false,
+                    isChangeSize = false,
+                    isChangeColor = false,
+                    isClickText = false,
+                    selectedTextIndex = -1,
+                )
+            }
+
+            is EditAction.OnSaveMemeDefaultBottomTab -> {
                 viewModelScope.launch {
                     val bitmapAsync = action.captureController.captureAsync()
                     try {
@@ -180,4 +265,35 @@ class EditViewModel : ViewModel() {
 
         return file // Return the saved file
     }
+
+
+    private fun loadCurrentStateToUndoStack() {
+        val undoStack = state.undoStack
+        if (undoStack.size == 5) {
+            undoStack.removeFirst()
+        }
+
+        undoStack.addLast(state.texts.toMutableList())
+
+        state = state.copy(
+            undoStack = undoStack,
+            isUndoEnabled = state.undoStack.isNotEmpty(),
+        )
+    }
+
+    private fun loadCurrentStateToRedoStack() {
+        val redoStack = state.redoStack
+        if (redoStack.size == 5) {
+            redoStack.removeFirst()
+        }
+
+        redoStack.addLast(state.texts.toMutableList())
+
+        state = state.copy(
+            redoStack = redoStack,
+            isRedoEnabled = state.redoStack.isNotEmpty(),
+        )
+    }
+
+
 }

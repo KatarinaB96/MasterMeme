@@ -16,7 +16,9 @@ sealed interface EditAction {
     data object OnChangeFontClick : EditAction //for clicking changing font style
     data object OnChangeSizeClick : EditAction //for clicking changing font size
     data object OnChangeColorClick : EditAction  //for clicking changing font color
-    data class OnDoubleTap(val index: Int) : EditAction  //for double tap on text to open "change text" dialog
+    data class OnDoubleTap(val index: Int) :
+        EditAction  //for double tap on text to open "change text" dialog
+
     data class OnSaveText(val index: Int, val text: String) :
         EditAction //for changing text in "change text" dialog and click "ok" button
 
@@ -26,15 +28,19 @@ sealed interface EditAction {
     data class OnChangePositionText(val index: Int, val offset: Offset) :
         EditAction //for changing position of text via dragging
 
+
     data object OnCancelChangeTextBottomTab :
         EditAction //for clicking "cancel" button in "change text" bottom bar
 
-    data class OnSaveChangeTextBottomTab(
+    data object OnSaveChangeTextBottomTab :
+        EditAction //for clicking "ok" button in "change text" bottom bar
+
+    data class OnSaveMemeDefaultBottomTab(
         val context: Context,
         val fileName: String,
         val captureController: CaptureController
     ) :
-        EditAction //for clicking "ok" button in "change text" bottom bar
+        EditAction //for clicking "save meme" button in default bottom bar
 
     data object OnClickOutsideOfText :
         EditAction //for clicking outside of text , null to selected text index
@@ -46,7 +52,9 @@ sealed interface EditAction {
     data class OnDeleteText(val index: Int) : EditAction //for deleting text
 
     data object OnBackClick : EditAction //for clicking back button
-    data object OnDismissBackDialog : EditAction //for clicking "cancel" button or outside dialog in back dialog
+    data object OnDismissBackDialog :
+        EditAction //for clicking "cancel" button or outside dialog in back dialog
+
     data object OnLeaveEditor : EditAction //for clicking back button in popup
 
     //  data class OnSaveMeme(val context: Context, val bitmap : ImageBitmap, val fileName: String) : EditAction //for saving meme
