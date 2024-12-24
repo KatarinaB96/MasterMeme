@@ -38,7 +38,8 @@ fun ChangeSizeBottomBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(80.dp),
+            .height(80.dp)
+            .background(MaterialTheme.colorScheme.secondaryContainer),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceAround
     ) {
@@ -60,18 +61,18 @@ fun ChangeSizeBottomBar(
             thumb = {
                 Box(
                     modifier = modifier
-                        .size(24.dp)  // Dış dairenin boyutu
+                        .size(24.dp)
                         .background(
-                            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f),  // Alpha değeri düşük dış daire
+                            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f),
                             shape = CircleShape
                         ),
                     contentAlignment = Alignment.Center
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(24.dp * 0.6f)  // İç dairenin boyutu (dış dairenin %60'ı)
+                            .size(24.dp * 0.6f)
                             .background(
-                                color = MaterialTheme.colorScheme.secondary,  // Tam opaklıkta iç daire
+                                color = MaterialTheme.colorScheme.secondary,
                                 shape = CircleShape
                             )
                     )
