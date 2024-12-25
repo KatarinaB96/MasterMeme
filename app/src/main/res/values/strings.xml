@@ -39,5 +39,11 @@
     <string name="leave_editor">Leave editor?</string>
     <string name="leave_editor_message">You will lose your precious meme. If you\'re fine with that, press ‘Leave’.</string>
     <string name="leave">Leave</string>
+    <string name="save_to_device">Save to device</string>
+    <string name="save_to_device_desc">Save created meme in the Files of your device</string>
+    <string name="share_the_meme">Share the meme</string>
+    <string name="share_the_meme_desc">Share your meme or open it in the other App</string>
+    <string name="saved_successfully">Your meme saved successfully</string>
+    <string name="error_when_saving">Something went wrong</string>
 
 </resources>

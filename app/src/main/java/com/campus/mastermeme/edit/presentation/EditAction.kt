@@ -35,11 +35,8 @@ sealed interface EditAction {
     data object OnSaveChangeTextBottomTab :
         EditAction //for clicking "ok" button in "change text" bottom bar
 
-    data class OnSaveMemeDefaultBottomTab(
-        val context: Context,
-        val fileName: String,
-        val captureController: CaptureController
-    ) :
+    data object OnSaveMemeDefaultBottomTab
+        :
         EditAction //for clicking "save meme" button in default bottom bar
 
     data object OnClickOutsideOfText :
@@ -57,8 +54,28 @@ sealed interface EditAction {
 
     data object OnLeaveEditor : EditAction //for clicking back button in popup
 
-    //  data class OnSaveMeme(val context: Context, val bitmap : ImageBitmap, val fileName: String) : EditAction //for saving meme
-//  data class OnChangeText(val texts: List<MemeText>) : EditAction
-    //   data class OnSelectText(val index: Int) : EditAction
+    data class OnSaveMemeToDevice(
+        val context: Context,
+        val fileName: String,
+        val captureController: CaptureController
+    ) : EditAction //for saving meme to device
+
+    data class OnShareMeme(
+        val context: Context,
+        val fileName: String,
+        val captureController: CaptureController
+    ) : EditAction //for sharing meme
+
+    data class OnPermissionResult(
+        val permission: String,
+        val isGranted: Boolean
+    ) : EditAction //for permission result
+
+    data object OnDismissPermissionDialog :
+        EditAction //for clicking "cancel" button or outside dialog in permission dialog
+
+    data object OnDismissSaveOrShareMemeBottomSheet :
+        EditAction //for clicking outside of save or share bottom sheet
+
 
 }
