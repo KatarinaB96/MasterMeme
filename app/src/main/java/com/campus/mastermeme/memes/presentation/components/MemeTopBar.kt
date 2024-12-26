@@ -46,7 +46,8 @@ fun MemeTopBar(
     onShowDialog: () -> Unit = {},
     onDropdownClick: () -> Unit = {},
     onDismissDropdown: () -> Unit = {},
-    onOptionSelect: (String) -> Unit = {}
+    onOptionSelect: (String) -> Unit = {},
+    onShareMemes: () -> Unit = {}
 ) {
     val context = LocalContext.current
     var selectedOption by remember { mutableStateOf(context.getString(R.string.favourites_first)) }
@@ -70,9 +71,7 @@ fun MemeTopBar(
                 }
             },
             actions = {
-                IconButton(onClick = {
-
-                }) {
+                IconButton(onClick = onShareMemes) {
                     Icon(
                         imageVector = Icons.Default.Share,
                         tint = MaterialTheme.colorScheme.secondary,

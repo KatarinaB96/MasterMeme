@@ -1,5 +1,6 @@
 package com.campus.mastermeme.core.domain
 
+import android.net.Uri
 import com.campus.mastermeme.core.domain.models.AvailableMeme
 import com.campus.mastermeme.core.domain.models.Meme
 import kotlinx.coroutines.flow.Flow
@@ -12,4 +13,5 @@ interface MemesRepository {
     suspend fun markAsFavorite(meme: Meme)
     suspend fun removeFromFavorites(meme: Meme)
     fun searchAvailableMemesByName(searchQuery: String): Flow<List<AvailableMeme>>
+    suspend fun getMemeUri(meme: Meme): Uri
 }

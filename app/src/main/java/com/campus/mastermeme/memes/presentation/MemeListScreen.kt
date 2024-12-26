@@ -1,5 +1,9 @@
 package com.campus.mastermeme.memes.presentation
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Parcelable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -17,7 +21,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.campus.mastermeme.R
-import com.campus.mastermeme.core.domain.models.Meme
 import com.campus.mastermeme.memes.presentation.components.DeleteMemesDialog
 import com.campus.mastermeme.memes.presentation.components.EmptyContent
 import com.campus.mastermeme.memes.presentation.components.FloatingActionButton
@@ -30,17 +33,12 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun MemeListScreenRoot(
     viewModel: MemeListViewModel = koinViewModel(),
-    onMemeClick: (Meme) -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     MemeListScreen(
         state = state,
         onAction = { action ->
-            when (action) {
-                is MemeListAction.OnMemeClick -> MemeListAction.OnMemeClick(action.meme)
-                else -> Unit
-            }
             viewModel.onAction(action)
         },
     )
@@ -78,6 +76,12 @@ fun MemeListScreen(
 
     LaunchedEffect(true) {
         skipPartiallyExpanded = false
+    }
+
+    LaunchedEffect(state.sharedMemeUris) {
+        if (state.sharedMemeUris.isNotEmpty()) {
+            shareMemes(context, state.sharedMemeUris)
+        }
     }
 
 
@@ -122,6 +126,9 @@ fun MemeListScreen(
                     expanded = false
                     val sortType = if (option == context.getString(R.string.favourites_first)) SortType.IS_FAVORITE else SortType.NEWEST
                     onAction(MemeListAction.OnSortTypeChanged(sortType))
+                },
+                onShareMemes = {
+                    onAction(MemeListAction.OnShareSelectedMemes(state.selectedMemes))
                 }
             )
         },
@@ -141,9 +148,6 @@ fun MemeListScreen(
             MemeGrid(
                 state = state,
                 paddingValues = paddingValues,
-                onImageClick = { meme ->
-                    onAction(MemeListAction.OnMemeClick(meme))
-                },
                 onLongPress = { meme ->
                     onAction(MemeListAction.OnSelectionMode(meme))
                 },
@@ -174,6 +178,21 @@ fun MemeListScreen(
         )
     }
 }
+
+private fun shareMemes(context: Context, uris: List<Uri>) {
+    val shareIntent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
+        type = "image/*"
+        putParcelableArrayListExtra(
+            Intent.EXTRA_STREAM,
+            ArrayList(uris.map { it as Parcelable })
+        )
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.share_memes)))
+}
+
+
+
 
 @Preview
 @Composable

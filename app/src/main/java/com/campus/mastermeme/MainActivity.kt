@@ -37,10 +37,8 @@ class MainActivity : ComponentActivity() {
                             }
                         ) {
                             val viewModel = koinViewModel<MemeListViewModel>()
-                            MemeListScreenRoot(viewModel = viewModel,
-                                onMemeClick = { meme ->
-                                    navController.navigate(Route.MemeDetail(meme.id))
-                                }
+                            MemeListScreenRoot(
+                                viewModel = viewModel
                             )
                         }
                         composable<Route.MemeDetail>(

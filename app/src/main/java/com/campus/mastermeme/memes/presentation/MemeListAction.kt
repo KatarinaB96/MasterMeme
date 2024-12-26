@@ -6,8 +6,6 @@ sealed interface MemeListAction {
     data object OnOrderByFavoriteClick : MemeListAction
     data object OnOrderByNewestClick : MemeListAction
     data class OnAddMemeClick(val meme: Meme) : MemeListAction
-    data class OnMemeClick(val meme: Meme) : MemeListAction
-
     data class OnSelectionMode(val meme: Meme) : MemeListAction
     data class OnSelectionChange(val updatedSelection: List<Meme>) : MemeListAction
     data object ExitSelectionMode : MemeListAction
@@ -16,6 +14,5 @@ sealed interface MemeListAction {
     data class OnFavoriteToggle(val meme: Meme) : MemeListAction
 
     data class OnSortTypeChanged(val sortType: SortType) : MemeListAction
-
     data class OnSearchQueryChange(val query: String) : MemeListAction
 }

@@ -1,9 +1,8 @@
 package com.campus.mastermeme.memes.presentation.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,11 +35,9 @@ import com.campus.mastermeme.R
 import com.campus.mastermeme.core.domain.models.Meme
 import com.campus.mastermeme.memes.presentation.MemeListState
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MemeGrid(
     state: MemeListState,
-    onImageClick: (Meme) -> Unit,
     paddingValues: PaddingValues,
     onLongPress: (Meme) -> Unit,
     onSelectionChange: (List<Meme>) -> Unit,
@@ -77,14 +75,12 @@ fun MemeGrid(
                         indication = null
                     )
                 } else {
-                    Modifier.combinedClickable(
-                        onClick = {
-                            onImageClick(meme)
-                        },
-                        onLongClick = {
-                            onLongPress(meme)
-                        }
-                    )
+                    Modifier.pointerInput(Unit) {
+                        detectTapGestures(
+                            onLongPress = { onLongPress(meme) }
+                        )
+                    }
+
                 }
             )
         }

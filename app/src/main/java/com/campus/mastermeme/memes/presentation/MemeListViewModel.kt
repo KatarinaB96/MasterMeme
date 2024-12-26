@@ -46,14 +46,6 @@ class MemeListViewModel(
 
     fun onAction(action: MemeListAction) {
         when (action) {
-            is MemeListAction.OnMemeClick -> {
-                TODO()
-            }
-
-            is MemeListAction.OnShareSelectedMemes -> {
-                TODO()
-            }
-
             is MemeListAction.DeleteMemeList -> {
                 viewModelScope.launch {
                     repository.deleteMemes(action.memes)
@@ -121,6 +113,15 @@ class MemeListViewModel(
                     inSelectionMode = false,
                     selectedMemes = emptyList()
                 )
+            }
+
+            is MemeListAction.OnShareSelectedMemes -> {
+                viewModelScope.launch {
+                    val selectedMemeUris = action.memes.map { meme ->
+                        repository.getMemeUri(meme)
+                    }
+                    _state.value = _state.value.copy(sharedMemeUris = selectedMemeUris)
+                }
             }
         }
     }

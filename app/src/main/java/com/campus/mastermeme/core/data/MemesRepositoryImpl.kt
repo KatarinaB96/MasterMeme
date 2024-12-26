@@ -1,5 +1,6 @@
 package com.campus.mastermeme.core.data
 
+import android.net.Uri
 import com.campus.mastermeme.core.data.local.MemeDao
 import com.campus.mastermeme.core.data.local.toDomainModel
 import com.campus.mastermeme.core.data.local.toEntity
@@ -42,5 +43,9 @@ class MemesRepositoryImpl(private val dao: MemeDao) : MemesRepository {
 
     override fun searchAvailableMemesByName(searchQuery: String): Flow<List<AvailableMeme>> {
         return dao.searchAvailableMemesByName(searchQuery).map { it.map { it.toDomainModel() } }
+    }
+
+    override suspend fun getMemeUri(meme: Meme): Uri {
+        return Uri.parse(meme.imageUri.toString())
     }
 }
