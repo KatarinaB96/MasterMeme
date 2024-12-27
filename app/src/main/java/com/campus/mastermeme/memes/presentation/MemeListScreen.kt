@@ -32,6 +32,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MemeListScreenRoot(
+    onMemeClick: (Int) -> Unit,
     viewModel: MemeListViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -39,6 +40,10 @@ fun MemeListScreenRoot(
     MemeListScreen(
         state = state,
         onAction = { action ->
+            when (action) {
+                is MemeListAction.OnMemeClick -> onMemeClick(action.memeId)
+                else -> Unit
+            }
             viewModel.onAction(action)
         },
     )
@@ -97,8 +102,11 @@ fun MemeListScreen(
                 state,
                 openBottomSheetFullScreen = { openBottomSheetFullScreen() },
                 onMemeSelected = { selectedMeme ->
-                    onAction(MemeListAction.OnAddMemeClick(selectedMeme))
-                    isSheetOpen = false
+                    coroutineScope.launch {
+                        isSheetOpen = false
+                        sheetState.hide()
+                    }
+                    onAction(MemeListAction.OnMemeClick(selectedMeme.resId))
                 },
                 onSearchQueryChange = {
                     onAction(MemeListAction.OnSearchQueryChange(it))
@@ -124,7 +132,8 @@ fun MemeListScreen(
                 onDismissDropdown = { expanded = false },
                 onOptionSelect = { option ->
                     expanded = false
-                    val sortType = if (option == context.getString(R.string.favourites_first)) SortType.IS_FAVORITE else SortType.NEWEST
+                    val sortType =
+                        if (option == context.getString(R.string.favourites_first)) SortType.IS_FAVORITE else SortType.NEWEST
                     onAction(MemeListAction.OnSortTypeChanged(sortType))
                 },
                 onShareMemes = {
@@ -170,7 +179,8 @@ fun MemeListScreen(
         DeleteMemesDialog(
             memesCount = state.selectedMemes.size,
             onCancel = {
-                showDialog = false },
+                showDialog = false
+            },
             onDelete = {
                 showDialog = false
                 onAction(MemeListAction.DeleteMemeList(state.selectedMemes))
@@ -188,14 +198,17 @@ private fun shareMemes(context: Context, uris: List<Uri>) {
         )
         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
-    context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.share_memes)))
+    context.startActivity(
+        Intent.createChooser(
+            shareIntent,
+            context.getString(R.string.share_memes)
+        )
+    )
 }
-
-
 
 
 @Preview
 @Composable
 fun MemeListScreenPreview() {
-    MemeListScreen(state = MemeListState(),{})
+    MemeListScreen(state = MemeListState(), {})
 }

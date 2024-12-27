@@ -56,6 +56,7 @@ import dev.shreyaspatil.capturable.controller.rememberCaptureController
 
 @Composable
 fun EditScreenRoot(
+    memeId: Int,
     viewModel: EditViewModel = org.koin.androidx.compose.koinViewModel(),
     onBackClick: () -> Unit
 ) {
@@ -74,16 +75,17 @@ fun EditScreenRoot(
 
     EditScreen(
         state = viewModel.state,
+        memeId = memeId,
         onAction = { action ->
             when (action) {
                 EditAction.OnLeaveEditor -> {
+                    println("EditAction.OnLeaveEditor")
                     onBackClick()
                 }
 
                 else -> Unit
             }
             viewModel.onAction(action)
-
         }
 
 
@@ -93,6 +95,7 @@ fun EditScreenRoot(
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun EditScreen(
+    memeId: Int,
     state: EditState,
     onAction: (EditAction) -> Unit
 ) {
@@ -274,6 +277,7 @@ private fun EditScreen(
                 }
 
                 MemeEditor(
+                    id = memeId,
                     texts = state.texts,
                     onPositionChange = { index, offset ->
                         onAction(EditAction.OnChangePositionText(index, offset))
@@ -351,7 +355,8 @@ private fun EditScreenPreview() {
 
             state = EditState(),
 
-            onAction = {}
+            onAction = {},
+            memeId = 1
 
         )
 

@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class MemeEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
-    val imageUri: Int,
+    val imageUri: String,
     val isFavorite: Boolean = false,
     val timestamp: Long
 )

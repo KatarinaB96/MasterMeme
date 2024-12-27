@@ -14,6 +14,8 @@ import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.campus.mastermeme.core.domain.MemesRepository
+import com.campus.mastermeme.core.domain.models.Meme
 import com.campus.mastermeme.edit.presentation.model.MemeText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -23,7 +25,9 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 
-class EditViewModel : ViewModel() {
+class EditViewModel(
+    private val repository: MemesRepository,
+) : ViewModel() {
     var state by mutableStateOf(EditState())
         private set
 
@@ -242,13 +246,24 @@ class EditViewModel : ViewModel() {
                     try {
                         val bitmap = bitmapAsync.await() // Wait for the bitmap to be captured
                             .asAndroidBitmap() // Convert to Android Bitmap
-                        val isSavedSuccessfully = saveBitmapToGallery(
+                        val savedPath = saveBitmapToGallery(
                             context = action.context,
                             bitmap = bitmap,
                             filename = action.fileName
                         )
 
-                        if (isSavedSuccessfully) {
+                        if (savedPath != null) {
+                            viewModelScope.launch {
+                                repository.addOrUpdateMeme(
+                                    Meme(
+                                        id = null,
+                                        name = action.fileName,
+                                        imageUri = savedPath,
+                                        isFavorite = false,
+                                        createdAt = System.currentTimeMillis()
+                                    )
+                                )
+                            }
                             eventChannel.send(EditEvent.SavedSuccessfully)
                         } else {
                             eventChannel.send(EditEvent.ErrorWhenSaving)
@@ -326,7 +341,7 @@ class EditViewModel : ViewModel() {
         return file // Return the saved file
     }
 */
-    private fun saveBitmapToGallery(context: Context, bitmap: Bitmap, filename: String): Boolean {
+    private fun saveBitmapToGallery(context: Context, bitmap: Bitmap, filename: String): String? {
         val resolver = context.contentResolver
         val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "$filename.png")
@@ -335,15 +350,16 @@ class EditViewModel : ViewModel() {
         }
 
         val imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+        println("imageUri: $imageUri")
         return if (imageUri != null) {
             resolver.openOutputStream(imageUri).use { outputStream ->
                 if (outputStream != null) {
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
                 }
             }
-            true
+            imageUri.toString()
         } else {
-            false
+            null
         }
     }
 

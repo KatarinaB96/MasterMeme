@@ -23,6 +23,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.rememberAsyncImagePainter
 import com.campus.mastermeme.R
 import com.campus.mastermeme.core.domain.models.Meme
 import com.campus.mastermeme.core.presentation.ui.theme.PrimaryContainer
@@ -40,19 +41,19 @@ fun MemeItem(
             .size(176.dp)
             .clip(RoundedCornerShape(8.dp))
     ) {
-//        Image(
-//            painter = rememberAsyncImagePainter(model = meme.imageUri),
-//            contentDescription = null,
-//            contentScale = ContentScale.Crop,
-//            modifier = Modifier.fillMaxSize()
-//        )
-
         Image(
-            painter =  painterResource(meme.imageUri),
+            painter = rememberAsyncImagePainter(model = meme.imageUri),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
+
+        /* Image(
+             painter =  painterResource(meme.imageUri),
+             contentDescription = null,
+             contentScale = ContentScale.Crop,
+             modifier = Modifier.fillMaxSize()
+         )*/
 
         if (inSelectionMode) {
             val gradientSelection = Brush.linearGradient(
@@ -71,7 +72,9 @@ fun MemeItem(
                     .background(brush = gradientSelection)
             )
             Icon(
-                painter = if (isSelected) painterResource(id = R.drawable.ic_check_filled) else painterResource(id = R.drawable.ic_check_empty),
+                painter = if (isSelected) painterResource(id = R.drawable.ic_check_filled) else painterResource(
+                    id = R.drawable.ic_check_empty
+                ),
                 contentDescription = if (isSelected) "Selected" else "Not selected",
                 tint = PrimaryContainer,
                 modifier = Modifier.align(Alignment.TopEnd)
@@ -109,5 +112,9 @@ fun MemeItem(
 @Preview
 @Composable
 fun MemeItemSelectionModePreview() {
-    MemeItem(meme = Meme(0,"n", R.drawable.i_bet_hes_thinking_about_other_women_10, true, 232L), true, true, {})
+   /* MemeItem(
+        meme = Meme(0, "n", R.drawable.i_bet_hes_thinking_about_other_women_10, true, 232L),
+        true,
+        true,
+        {})*/
 }
