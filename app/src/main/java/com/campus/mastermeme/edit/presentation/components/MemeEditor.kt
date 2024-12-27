@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -52,8 +53,8 @@ fun MemeEditor(
     Box(
         modifier = modifier.background(Color.Red)
     ) {
-        var imageWidth by remember { mutableStateOf(0f) }
-        var imageHeight by remember { mutableStateOf(0f) }
+        var imageWidth by remember { mutableFloatStateOf(0f) }
+        var imageHeight by remember { mutableFloatStateOf(0f) }
 
         Box {
             Image(
@@ -110,7 +111,6 @@ fun DraggableText(
                 detectDragGestures(
                     onDragEnd = {
                         onDragEnd(offset)
-                        println("Drag End")
                     }
                 ) { change, dragAmount ->
                     change.consume()
@@ -118,7 +118,7 @@ fun DraggableText(
                         .coerceIn(
                             0f,
                             parentWidth - textSize.width
-                        ) // Text genişliği hesaba katılıyor
+                        )
                     val newY = (offset.y + dragAmount.y)
                         .coerceIn(0f, parentHeight - textSize.height) // Text
 
@@ -129,7 +129,6 @@ fun DraggableText(
             .pointerInput(Unit) {
                 detectTapGestures(
                     onDoubleTap = {
-                        println("Double Tap Detected, index: $index")
                         onDoubleTap(index)
                     },
                     onTap = {
@@ -155,7 +154,8 @@ fun DraggableText(
                 )
                 .onGloballyPositioned { layoutCoordinates ->
                     textSize = layoutCoordinates.size
-                }.padding(8.dp)
+                }
+                .padding(8.dp)
 
         )
         if (isSelected) {

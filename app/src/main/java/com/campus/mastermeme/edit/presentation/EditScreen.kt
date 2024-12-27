@@ -122,7 +122,7 @@ private fun EditScreen(
                 onAction(
                     EditAction.OnSaveMemeToDevice(
                         context,
-                        "meme23.png",
+                        "meme_${System.currentTimeMillis()}.png",
                         captureController
                     )
                 )

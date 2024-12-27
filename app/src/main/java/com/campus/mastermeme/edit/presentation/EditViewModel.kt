@@ -51,7 +51,6 @@ class EditViewModel : ViewModel() {
                     isRedoEnabled = state.redoStack.isNotEmpty(),
                 )
 
-                println("undoStack OnAddText: ${state.undoStack}")
             }
 
             is EditAction.OnClickText -> {
@@ -63,7 +62,6 @@ class EditViewModel : ViewModel() {
                     tempMemeText = state.texts[action.index],
                 )
 
-                println("undoStack OnClickText: ${state.undoStack}")
             }
 
             is EditAction.OnChangeFontClick -> {
@@ -116,7 +114,6 @@ class EditViewModel : ViewModel() {
                     redoStack = redoStack,
                     isRedoEnabled = state.redoStack.isNotEmpty()
                 )
-                println("undoStack OnRedo: ${state.undoStack}")
 
             }
 
@@ -134,8 +131,6 @@ class EditViewModel : ViewModel() {
                     isUndoEnabled = state.undoStack.isNotEmpty(),
                     isRedoEnabled = state.redoStack.isNotEmpty()
                 )
-                println("undoStack OnUndo: ${state.undoStack}")
-
             }
 
 
@@ -148,8 +143,6 @@ class EditViewModel : ViewModel() {
                 state = state.copy(
                     texts = texts,
                 )
-                println("undoStack OnChangePositionText: ${state.undoStack}")
-
             }
 
             EditAction.OnCancelChangeTextBottomTab -> {
@@ -261,7 +254,7 @@ class EditViewModel : ViewModel() {
                             eventChannel.send(EditEvent.ErrorWhenSaving)
                         }
                     } catch (error: Throwable) {
-                        // Error occurred, do something.
+                        error.printStackTrace()
                     }
                 }
             }
@@ -283,7 +276,6 @@ class EditViewModel : ViewModel() {
 
             is EditAction.OnShareMeme -> {
                 viewModelScope.launch {
-                    println("OnShareMeme")
 
                     val bitmapAsync = action.captureController.captureAsync()
                     try {
@@ -294,16 +286,13 @@ class EditViewModel : ViewModel() {
                             bitmap = bitmap,
                             fileName = action.fileName
                         )
-                        println("OnShareMeme file: $file")
 
 
                         if (file != null) {
-                            println("OnShareMeme shareImage()")
-
                             shareImage(action.context, file)
                         }
                     } catch (error: Throwable) {
-                        // Error occurred, do something.
+                        error.printStackTrace()
                     }
                 }
 
@@ -322,7 +311,6 @@ class EditViewModel : ViewModel() {
     /*
     fun saveBitmapToDevice(context: Context, bitmap: Bitmap, fileName: String): File? {
         val externalDirectory = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        println("externalDirectory: $externalDirectory")
         val file = File(externalDirectory, fileName) // Create a file in the cache directory
 
         try {

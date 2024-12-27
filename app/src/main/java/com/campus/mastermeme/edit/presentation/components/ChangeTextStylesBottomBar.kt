@@ -64,7 +64,6 @@ fun ChangeTextStylesBottomBar(
                     .clickable {
                         onTextStyleClick()
                     }
-
                     .background(
                         if (isTextStyleSelected) DarkSurfaceContainerHigh else Color.Transparent,
                         shape = RoundedCornerShape(12.dp)

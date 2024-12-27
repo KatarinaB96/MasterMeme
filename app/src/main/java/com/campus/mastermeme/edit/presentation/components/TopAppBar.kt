@@ -38,7 +38,7 @@ fun TopAppBar(
 
         title = {
             Text(
-                "New Meme",
+                stringResource(R.string.new_meme),
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurface
             )

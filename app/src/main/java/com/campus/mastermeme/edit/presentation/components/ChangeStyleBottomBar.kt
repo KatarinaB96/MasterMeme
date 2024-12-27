@@ -24,7 +24,6 @@ import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.campus.mastermeme.R
 import com.campus.mastermeme.ui.theme.MasterMemeTheme
 import com.campus.mastermeme.ui.theme.provider
 
@@ -33,23 +32,6 @@ fun ChangeStyleBottomBar(
     onChangeFontClick: (FontFamily) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val fontList = listOf(
-        R.drawable.frame_42,
-        R.drawable.frame_43,
-        R.drawable.frame_44,
-        R.drawable.frame_45,
-        R.drawable.frame_46,
-        R.drawable.frame_42,
-        R.drawable.frame_43,
-        R.drawable.frame_44,
-        R.drawable.frame_45,
-        R.drawable.frame_46,
-        R.drawable.frame_42,
-        R.drawable.frame_43,
-        R.drawable.frame_44,
-        R.drawable.frame_45,
-        R.drawable.frame_46,
-    )
 
     val robotoFont = FontFamily(
         Font(
@@ -132,16 +114,6 @@ fun ChangeStyleBottomBar(
             }
 
         }
-
-
-        /*  fontList.forEach { font ->
-              Image(
-                  painter = painterResource(id = font),
-                  contentDescription = "My Local Image",
-                  modifier = Modifier.size(64.dp),
-                  contentScale = ContentScale.Crop
-              )
-          }*/
 
     }
 
