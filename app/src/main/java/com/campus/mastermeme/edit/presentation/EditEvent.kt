@@ -1,4 +1,6 @@
 package com.campus.mastermeme.edit.presentation
 
-class EditEvent {
+sealed interface EditEvent {
+    data object SavedSuccessfully : EditEvent
+    data object ErrorWhenSaving : EditEvent
 }

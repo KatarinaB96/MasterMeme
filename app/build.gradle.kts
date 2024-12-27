@@ -62,4 +62,7 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.android.workmanager)
     implementation(libs.koin.androidx.compose)
+
+    implementation(libs.capturable)
+
 }

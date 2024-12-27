@@ -33,5 +33,20 @@
     <string name="text_size">Text Size</string>
     <string name="small_size">Small Size</string>
     <string name="big_size">Big Size</string>
+    <string name="text">Text</string>
+    <string name="ok">OK</string>
+    <string name="save_meme">Save Meme</string>
+    <string name="leave_editor">Leave editor?</string>
+    <string name="leave_editor_message">You will lose your precious meme. If you\'re fine with that, press ‘Leave’.</string>
+    <string name="leave">Leave</string>
+    <string name="save_to_device">Save to device</string>
+    <string name="save_to_device_desc">Save created meme in the Files of your device</string>
+    <string name="share_the_meme">Share the meme</string>
+    <string name="share_the_meme_desc">Share your meme or open it in the other App</string>
+    <string name="saved_successfully">Your meme saved successfully</string>
+    <string name="error_when_saving">Something went wrong</string>
+    <string name="permission_required">Permission required</string>
+    <string name="grant_permission">Grant permission</string>
+    <string name="new_meme">New Meme</string>
 
 </resources>
