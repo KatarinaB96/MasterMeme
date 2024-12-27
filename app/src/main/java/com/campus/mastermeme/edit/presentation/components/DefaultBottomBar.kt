@@ -27,9 +27,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.campus.mastermeme.R
-import com.campus.mastermeme.ui.theme.GradientColor2
-import com.campus.mastermeme.ui.theme.MasterMemeTheme
-import com.campus.mastermeme.ui.theme.PrimaryContainer
+import com.campus.mastermeme.core.presentation.ui.theme.MasterMemeTheme
+import com.campus.mastermeme.core.presentation.ui.theme.GradientColor2
+import com.campus.mastermeme.core.presentation.ui.theme.PrimaryContainer
 
 @Composable
 fun DefaultBottomBar(

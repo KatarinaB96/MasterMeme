@@ -24,8 +24,8 @@ import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.campus.mastermeme.ui.theme.MasterMemeTheme
-import com.campus.mastermeme.ui.theme.provider
+import com.campus.mastermeme.core.presentation.ui.theme.MasterMemeTheme
+import com.campus.mastermeme.core.presentation.ui.theme.provider
 
 @Composable
 fun ChangeStyleBottomBar(

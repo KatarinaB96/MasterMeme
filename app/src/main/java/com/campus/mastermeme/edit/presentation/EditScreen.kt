@@ -49,8 +49,8 @@ import com.campus.mastermeme.edit.presentation.components.PermissionDialog
 import com.campus.mastermeme.edit.presentation.components.SaveOrShareBottomSheet
 import com.campus.mastermeme.edit.presentation.components.StoragePermissionTextProvider
 import com.campus.mastermeme.edit.presentation.components.TopAppBar
-import com.campus.mastermeme.ui.ObserveAsEvents
-import com.campus.mastermeme.ui.theme.MasterMemeTheme
+import com.campus.mastermeme.core.presentation.ui.theme.MasterMemeTheme
+import com.campus.mastermeme.core.presentation.ui.ObserveAsEvents
 import dev.shreyaspatil.capturable.capturable
 import dev.shreyaspatil.capturable.controller.rememberCaptureController
 

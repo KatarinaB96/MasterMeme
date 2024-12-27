@@ -48,5 +48,6 @@
     <string name="permission_required">Permission required</string>
     <string name="grant_permission">Grant permission</string>
     <string name="new_meme">New Meme</string>
+    <string name="share_memes">Share memes</string>
 
 </resources>

@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.campus.mastermeme.ui.theme.MasterMemeTheme
+import com.campus.mastermeme.core.presentation.ui.theme.MasterMemeTheme
 
 @Composable
 fun ChangeColorBottomBar(
