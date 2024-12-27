@@ -59,13 +59,14 @@ dependencies {
 
     implementation(libs.core.splashscreen)
     implementation(libs.coil.compose)
-    implementation(libs.androidx.ui.text.google.fonts)
+    implementation (libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.compose.animation)
-    implementation(libs.koin.core)
+    implementation (libs.koin.core)
     implementation(libs.koin.android)
     implementation(libs.koin.android.workmanager)
     implementation(libs.koin.androidx.compose)
 
+    implementation(libs.capturable)
     implementation(libs.androidx.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
