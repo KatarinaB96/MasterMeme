@@ -59,7 +59,11 @@ class MainActivity : ComponentActivity() {
                             EditScreenRoot(
                                 viewModel = viewModel,
                                 onBackClick = {
-                                    navController.popBackStack()
+                                    if (navController.previousBackStackEntry != null) {
+                                        navController.navigateUp()
+                                    } else {
+                                        navController.navigate(Route.MemeList)
+                                    }
                                 },
                                 memeId = args.memeId
                             )

@@ -102,8 +102,11 @@ fun MemeListScreen(
                 state,
                 openBottomSheetFullScreen = { openBottomSheetFullScreen() },
                 onMemeSelected = { selectedMeme ->
+                    coroutineScope.launch {
+                        isSheetOpen = false
+                        sheetState.hide()
+                    }
                     onAction(MemeListAction.OnMemeClick(selectedMeme.resId))
-                    isSheetOpen = false
                 },
                 onSearchQueryChange = {
                     onAction(MemeListAction.OnSearchQueryChange(it))
