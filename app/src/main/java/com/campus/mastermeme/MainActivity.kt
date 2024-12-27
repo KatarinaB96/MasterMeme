@@ -11,8 +11,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.campus.mastermeme.core.Route
 import com.campus.mastermeme.core.presentation.ui.theme.MasterMemeTheme
+import com.campus.mastermeme.edit.presentation.EditScreenRoot
+import com.campus.mastermeme.edit.presentation.EditViewModel
 import com.campus.mastermeme.memes.presentation.MemeListScreenRoot
 import com.campus.mastermeme.memes.presentation.MemeListViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -38,23 +41,30 @@ class MainActivity : ComponentActivity() {
                         ) {
                             val viewModel = koinViewModel<MemeListViewModel>()
                             MemeListScreenRoot(
-                                viewModel = viewModel
+                                viewModel = viewModel,
+                                onMemeClick = { memeId ->
+                                    navController.navigate(Route.EditMeme(memeId))
+                                }
                             )
                         }
-                        composable<Route.MemeDetail>(
-                            enterTransition = {
-                                slideInHorizontally { initialOffset ->
-                                    initialOffset
-                                }
-                            },
-                            exitTransition = {
-                                slideOutHorizontally { initialOffset ->
-                                    initialOffset
-                                }
+
+                        composable<Route.EditMeme>(
+                            exitTransition = { slideOutHorizontally() },
+                            popEnterTransition = {
+                                slideInHorizontally()
                             }
                         ) {
-
+                            val args = it.toRoute<Route.EditMeme>()
+                            val viewModel = koinViewModel<EditViewModel>()
+                            EditScreenRoot(
+                                viewModel = viewModel,
+                                onBackClick = {
+                                    navController.popBackStack()
+                                },
+                                memeId = args.memeId
+                            )
                         }
+
 
                     }
                 }

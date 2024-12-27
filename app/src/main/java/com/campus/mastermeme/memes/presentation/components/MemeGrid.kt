@@ -52,7 +52,7 @@ fun MemeGrid(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(state.memes, key = { it.id }) { meme ->
+        items(state.memes, key = { it.id ?: 0 }) { meme ->
             val isSelected = state.selectedMemes.contains(meme)
 
             MemeItem(

@@ -42,13 +42,14 @@ import com.campus.mastermeme.edit.presentation.model.MemeText
 
 @Composable
 fun MemeEditor(
+    id: Int, // Image resource id
     texts: List<MemeText>,
     onPositionChange: (Int, Offset) -> Unit = { _, _ -> },
     onDoubleTap: (Int) -> Unit = {},
     onSelectText: (Int) -> Unit = {},
     onDeleteText: (Int) -> Unit = {},
     selectedTextIndex: Int = -1,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier.background(Color.Red)
@@ -58,7 +59,7 @@ fun MemeEditor(
 
         Box {
             Image(
-                painter = painterResource(id = R.drawable.ic_launcher_background),
+                painter = painterResource(id = id),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize()

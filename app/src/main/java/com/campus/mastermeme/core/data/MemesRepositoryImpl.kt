@@ -30,7 +30,9 @@ class MemesRepositoryImpl(private val dao: MemeDao) : MemesRepository {
     }
 
     override suspend fun deleteMemes(memes: List<Meme>) {
-        return dao.deleteMemes(memes.map { it.id })
+        return dao.deleteMemes(memes.mapNotNull {
+            it.id
+        })
     }
 
     override suspend fun markAsFavorite(meme: Meme) {

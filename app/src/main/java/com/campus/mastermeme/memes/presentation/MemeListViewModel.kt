@@ -61,11 +61,6 @@ class MemeListViewModel(
                 applySort(action.sortType)
             }
 
-            is MemeListAction.OnAddMemeClick -> {
-                viewModelScope.launch {
-                    repository.addOrUpdateMeme(action.meme)
-                }
-            }
 
             is MemeListAction.OnFavoriteToggle -> {
                 viewModelScope.launch {
@@ -123,6 +118,7 @@ class MemeListViewModel(
                     _state.value = _state.value.copy(sharedMemeUris = selectedMemeUris)
                 }
             }
+            else -> Unit
         }
     }
 

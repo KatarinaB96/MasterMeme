@@ -16,7 +16,7 @@ fun MemeEntity.toDomainModel(): Meme {
 
 fun Meme.toEntity(): MemeEntity {
     return MemeEntity(
-        id = id,
+        id = id ?: 0,
         name = name,
         imageUri = imageUri,
         isFavorite = isFavorite,
