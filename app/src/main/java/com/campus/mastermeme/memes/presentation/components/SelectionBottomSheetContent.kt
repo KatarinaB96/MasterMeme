@@ -38,15 +38,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.campus.mastermeme.R
-import com.campus.mastermeme.core.domain.models.Meme
+import com.campus.mastermeme.core.domain.models.AvailableMeme
 import com.campus.mastermeme.memes.presentation.MemeListState
-import java.util.UUID
 
 @Composable
 fun SelectionBottomSheetContent(
     state: MemeListState,
     openBottomSheetFullScreen: () -> Unit,
-    onMemeSelected: (Meme) -> Unit,
+    onMemeSelected: (AvailableMeme) -> Unit,
     onSearchQueryChange: (String) -> Unit,
 ) {
     var isSearchVisible by remember { mutableStateOf(false) }
@@ -87,15 +86,7 @@ fun SelectionBottomSheetContent(
                 BottomSheetItem(
                     resId = meme.resId,
                     onClick = {
-                        //TODO:
-                        val newMeme = Meme(
-                            id = meme.id,
-                            name = UUID.randomUUID().toString(),
-                            imageUri = meme.resId,
-                            isFavorite = false,
-                            createdAt = System.currentTimeMillis()
-                        )
-                        onMemeSelected(newMeme)
+                        onMemeSelected(meme)
                     }
                 )
             }

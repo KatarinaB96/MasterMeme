@@ -37,6 +37,7 @@ fun LeaveEditorDialog(
         confirmButton = {
             TextButton(
                 onClick = {
+                    onDismiss()
                     onLeave()
                 },
                 ) {

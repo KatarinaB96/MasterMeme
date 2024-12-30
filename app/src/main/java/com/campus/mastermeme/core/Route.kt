@@ -10,6 +10,6 @@ sealed interface Route {
     data object MemeList : Route
 
     @Serializable
-    data class MemeDetail(val memeId: Int) : Route
+    data class EditMeme(val memeId: Int) : Route
 
 }
